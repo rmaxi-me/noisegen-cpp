@@ -46,7 +46,7 @@ jobs:
           path: ~/.conan
           key: ${{ runner.os }}-conan-${{ matrix.mode }}-${{ hashFiles('**/conanfile.txt') }}
           restore-keys: |
-            ${{ runner.os }}-conan-
+            ${{ runner.os }}-conan-${{ matrix.mode }}-
 
       - name: Configure
         run: |
