@@ -3,7 +3,7 @@ project(perlin-noise-generator LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
-if (NOT CMAKE_BUILD_TYPE OR "${CMAKE_BUILD_TYPE}" STREQUAL "s")
+if (NOT CMAKE_BUILD_TYPE OR "${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE Release)
 
     message(WARNING "CMAKE_BUILD_TYPE undefined. Defaulting to Release.\nPossible values: [Debug, Release, MinSizeRel, RelWithDebInfo]")
