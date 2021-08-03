@@ -1,0 +1,7 @@
+[requires]
+fmt/8.0.1
+
+[generators]
+cmake
+cmake_paths
+cmake_find_package
