@@ -1,0 +1,39 @@
+name: C++ Cross-Platform Build
+
+on: push
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        mode: [ "Debug", "Release" ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Conan Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.conan
+          key: ${{ runner.os }}-conan-${{ hashFiles('**/conanfile.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-conan-
+
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.os }} ..
+
+      - name: Build
+        working-directory: build
+        run: cmake --build .
