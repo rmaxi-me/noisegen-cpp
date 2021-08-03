@@ -3,6 +3,12 @@ project(perlin-noise-generator LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
+if (NOT CMAKE_BUILD_TYPE OR "${CMAKE_BUILD_TYPE}" STREQUAL "s")
+    set(CMAKE_BUILD_TYPE Release)
+
+    message(WARNING "CMAKE_BUILD_TYPE undefined. Defaulting to Release.\nPossible values: [Debug, Release, MinSizeRel, RelWithDebInfo]")
+endif ()
+
 include(conan/conan.cmake)
 run_conan()
 link_directories(${CONAN_LIB_DIRS})
