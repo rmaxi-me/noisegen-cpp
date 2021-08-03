@@ -11,14 +11,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ ubuntu-20.04, macos-11, windows-2019 ]
         mode: [ "Debug", "Release" ]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
             pip-path: ~/.cache/pip
-          - os: macos-latest
+          - os: macos-11
             pip-path: ~/Library/Caches/pip
-          - os: windows-latest
+          - os: windows-2019
             pip-path: ~\AppData\Local\pip\Cache
 
     runs-on: ${{ matrix.os }}
