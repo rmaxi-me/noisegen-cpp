@@ -1,5 +1,7 @@
 if (UNIX)
-    link_libraries(pthread stdc++fs)
+    if (NOT APPLE)
+        link_libraries(pthread stdc++fs)
+    endif ()
     add_compile_options(-Wall -Wextra -Weffc++)
 endif ()
 
