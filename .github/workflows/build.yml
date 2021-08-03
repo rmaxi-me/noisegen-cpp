@@ -32,7 +32,7 @@ jobs:
       - name: Pip Cache
         uses: actions/cache@v2
         with:
-          path: ${{ matrix.path }}
+          path: ${{ matrix.pip-path }}
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
