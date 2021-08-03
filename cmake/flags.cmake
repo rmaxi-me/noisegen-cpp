@@ -16,6 +16,8 @@ if (${RELEASE_WITH_PROFILER})
 endif ()
 
 if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
     #    add_link_options(/ignore:4099)
     #    link_libraries(legacy_stdio_definitions)
 endif ()
