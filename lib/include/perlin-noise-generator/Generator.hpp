@@ -31,7 +31,7 @@ struct ImageSize
 class Generator
 {
 public:
-    using PermutationArray = std::array<uint8_t, 512>;
+    using PermutationArray = std::array<uint8_t, 256>;
 
     /**
      * Default Ken Perlin's permutation array
@@ -53,13 +53,13 @@ public:
     explicit Generator(const ImageSize &size, const PermutationArray &permutationArray = s_permutations);
     Generator(size_t x, size_t y, const PermutationArray &permutationArray = s_permutations);
 
-    void printHelloWorld() const;
-
     void shufflePermutationArray();
+    void printPermutationArray() const;
 
-    [[nodiscard]] inline auto getSize() const noexcept { return m_size; }
-    [[nodiscard]] inline auto getSizeX() const noexcept { return m_size.x; }
-    [[nodiscard]] inline auto getSizeY() const noexcept { return m_size.y; }
+    [[nodiscard]] inline auto getImageSize() const noexcept { return m_size; }
+    [[nodiscard]] inline auto getImageSizeX() const noexcept { return m_size.x; }
+    [[nodiscard]] inline auto getImageSizeY() const noexcept { return m_size.y; }
+    [[nodiscard]] inline const PermutationArray &getPermutationArray() { return m_permutations; }
 
 private:
     ImageSize m_size;
@@ -69,4 +69,4 @@ private:
     std::random_device m_rd{};
     std::mt19937 m_gen{m_rd()};
 };
-}  // namespace perlin
+}  // namespace pengen

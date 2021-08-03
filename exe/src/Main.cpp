@@ -14,11 +14,27 @@
 **   limitations under the License.
 */
 
+#include <fmt/core.h>
+
 #include <perlin-noise-generator/Generator.hpp>
 
 int main()
 {
     pengen::Generator perlinGenerator{1920, 1080};
+
+    perlinGenerator.printPermutationArray();
+
+    fmt::print("\n");
+    perlinGenerator.shufflePermutationArray();
+    perlinGenerator.printPermutationArray();
+
+    fmt::print("\n");
+    perlinGenerator.shufflePermutationArray();
+    perlinGenerator.printPermutationArray();
+
+    fmt::print("\n");
+    perlinGenerator.shufflePermutationArray();
+    perlinGenerator.printPermutationArray();
 
     return 0;
 }

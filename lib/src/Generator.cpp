@@ -15,7 +15,7 @@
 */
 
 #include <fmt/core.h>
-#include <random>
+#include <spdlog/spdlog.h>
 
 #include "Generator.hpp"
 
@@ -34,8 +34,14 @@ void pengen::Generator::shufflePermutationArray()
     std::shuffle(m_permutations.begin(), m_permutations.end(), m_gen);
 }
 
-void pengen::Generator::printHelloWorld() const
+void pengen::Generator::printPermutationArray() const
 {
-    (void) this;
-    fmt::print("Hello world!\n");
+    for (size_t i = 0; i < s_permutations.size(); i++)
+    {
+        if (i != 0 && i % 16 == 0)
+            fmt::print("\n");
+
+        fmt::print("{:3d}, ", m_permutations[i]);
+    }
+    fmt::print("\n");
 }

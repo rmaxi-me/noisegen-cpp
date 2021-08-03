@@ -1,5 +1,9 @@
 [requires]
 fmt/8.0.1
+spdlog/1.9.1
+
+[options]
+spdlog:header_only=True
 
 [generators]
 cmake
