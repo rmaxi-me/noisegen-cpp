@@ -46,7 +46,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.conan
-          key: ${{ runner.os }}-conan-${{ hashFiles('**/conanfile.txt') }}
+          key: ${{ runner.os }}-conan-${{ matrix.mode }}-${{ hashFiles('**/conanfile.txt') }}
           restore-keys: |
             ${{ runner.os }}-conan-
 
