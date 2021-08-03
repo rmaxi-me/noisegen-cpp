@@ -2,6 +2,7 @@
 fmt/8.0.1
 
 [options]
+fmt:header_only=True
 
 [generators]
 cmake
