@@ -1,5 +1,9 @@
+add_compile_definitions(FMT_HEADER_ONLY)
+
 if (UNIX)
-    link_libraries(pthread stdc++fs)
+    if (NOT APPLE)
+        link_libraries(pthread stdc++fs)
+    endif ()
     add_compile_options(-Wall -Wextra -Weffc++)
 endif ()
 
@@ -14,6 +18,6 @@ if (${RELEASE_WITH_PROFILER})
 endif ()
 
 if (MSVC)
-    #    add_link_options(/ignore:4099)
+    add_link_options(/ignore:4099)
     #    link_libraries(legacy_stdio_definitions)
 endif ()

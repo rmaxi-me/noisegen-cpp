@@ -1,0 +1,61 @@
+name: C++ Cross-Platform Build
+
+on: push
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, macos-10.15, windows-2019 ]
+        mode: [ "Debug", "Release" ]
+        include:
+          - os: ubuntu-20.04
+            pip-path: ~/.cache/pip
+          - os: macos-10.15
+            pip-path: ~/Library/Caches/pip
+          - os: windows-2019
+            pip-path: ~\AppData\Local\pip\Cache
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+
+#      - name: apt dependencies
+#        run: sudo apt install -y libgtk2.0-dev
+#        if: startsWith(matrix.os, 'ubuntu')
+
+      - name: Pip Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.pip-path }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Pip Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Conan Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.conan
+          key: ${{ runner.os }}-conan-${{ matrix.mode }}-v4-${{ hashFiles('**/conanfile.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-conan-${{ matrix.mode }}-v4-
+
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.mode }} ..
+
+      - name: Build
+        working-directory: build
+        run: cmake --build .

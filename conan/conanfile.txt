@@ -1,9 +1,9 @@
 [requires]
 fmt/8.0.1
-spdlog/1.9.1
+argparse/2.1
 
 [options]
-spdlog:header_only=True
+fmt:header_only=True  # FIXME: 'False' does not compile in release mode on macOS and Windows.
 
 [generators]
 cmake
