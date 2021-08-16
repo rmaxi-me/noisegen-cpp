@@ -18,24 +18,16 @@
 
 #include "Generator.hpp"
 
-pengen::Generator::Generator(const pengen::ImageSize &size, const PermutationArray &permutationArray)
-    : m_size{size}, m_permutations{permutationArray}
-{
-}
-
 pengen::Generator::Generator(size_t x, size_t y, const PermutationArray &permutationArray)
-    : Generator(ImageSize{x, y}, permutationArray)
+  : m_permutations{permutationArray}
 {
-}
-
-void pengen::Generator::shufflePermutationArray()
-{
-    std::shuffle(m_permutations.begin(), m_permutations.end(), m_gen);
+    (void) x;
+    (void) y;
 }
 
 void pengen::Generator::printPermutationArray() const
 {
-    for (size_t i = 0; i < s_permutations.size(); i++)
+    for (size_t i = 0; i < s_KenPerlinPermutations.size(); i++)
     {
         if (i != 0 && i % 16 == 0)
             fmt::print("\n");
