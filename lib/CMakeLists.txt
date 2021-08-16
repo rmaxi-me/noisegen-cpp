@@ -13,7 +13,3 @@ if (UNIX)
     )
 endif ()
 
-target_precompile_headers(
-        libpengen PUBLIC
-        <fmt/core.h>
-)
