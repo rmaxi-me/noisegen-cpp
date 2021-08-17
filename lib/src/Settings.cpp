@@ -17,4 +17,22 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <sstream>
+
 #include "Settings.hpp"
+
+std::ostream &pengen::operator<<(std::ostream &os, const pengen::Settings &settings)
+{
+    os << "width: " << settings.width << " height: " << settings.height << " octaves: " << settings.octaves
+       << " frequency: " << settings.frequency << " amplitude: " << settings.amplitude
+       << " persistence: " << settings.persistence;
+    return os;
+}
+
+std::string pengen::Settings::toString() const
+{
+    std::ostringstream oss{};
+
+    oss << *this;
+    return oss.str();
+}

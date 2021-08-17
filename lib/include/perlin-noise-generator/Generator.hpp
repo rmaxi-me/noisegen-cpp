@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <array>
 #include <random>
 #include <cstddef>
@@ -23,6 +24,14 @@
 #include <algorithm>
 
 #include "Random.hpp"
+#include "Settings.hpp"
+
+/*
+ * This implementation is based on Ken Perlin's original implementation.
+ * I improved and modified stuff I felt like modifying (such as frequency and octaves modifiers).
+ *
+ * Original implementation: https://mrl.cs.nyu.edu/~perlin/noise/
+ */
 
 namespace pengen {
 class Generator
@@ -46,22 +55,49 @@ public:
       242, 193, 238, 210, 144, 12,  191, 179, 162, 241, 81,  51,  145, 235, 249, 14,  239, 107, 49,  192, 214, 31,
       181, 199, 106, 157, 184, 84,  204, 176, 115, 121, 50,  45,  127, 4,   150, 254, 138, 236, 205, 93,  222, 114,
       67,  29,  24,  72,  243, 141, 128, 195, 78,  66,  215, 61,  156, 180};
+    static constexpr PermutationArray s_PseudoRandomPermutations{};
 
-    Generator(size_t x, size_t y, const PermutationArray &permutationArray = s_KenPerlinPermutations);
+    explicit Generator(const Settings &settings, const PermutationArray &permutationArray = s_PseudoRandomPermutations);
+
+    void generate();
+    [[nodiscard]] double noise(double x, double y, double z) const noexcept;
+    void saveToPGM(const char *filepath) const;
 
     template<typename Gen>
     void shufflePermutationArray(Gen &&generator)
     {
         std::shuffle(m_permutations.begin(), m_permutations.end(), std::forward<Gen>(generator));
     }
+    inline void shufflePermutationArray() { shufflePermutationArray(Random::s_generator); }
 
-    void shufflePermutationArray() { shufflePermutationArray(Random::s_generator); }
-
-    void printPermutationArray() const;
-
-    [[nodiscard]] inline const PermutationArray &getPermutationArray() { return m_permutations; }
+    [[nodiscard]] inline const PermutationArray &getPermutationArray() const noexcept { return m_permutations; }
 
 private:
+    Settings m_settings;
     PermutationArray m_permutations = s_KenPerlinPermutations;
+
+    std::vector<std::vector<double>> m_result{};
+    double m_minNoiseValue{};
+    double m_maxNoiseValue{};
+
+    /**
+     * Get a permutation value from the array.
+     * Allows index overflow for simpler operations with the array.
+     * @param index for the array, allows overflow
+     * @return m_permutations array value, modulo m_permutations.size()
+     */
+    [[nodiscard]] inline uint8_t getPermutation(size_t index) const
+    {
+        return m_permutations[index % m_permutations.size()];
+    }
+
+    static inline constexpr double fade(double t) noexcept { return t * t * t * (t * (t * 6 - 15) + 10); }
+    static inline constexpr double lerp(double t, double a, double b) noexcept { return a + t * (b - a); }
+    static inline constexpr double grad(int hash, double x, double y, double z) noexcept
+    {
+        const int h = hash & 15;
+        const double u = h < 8 ? x : y, v = h < 4 ? y : h == 12 || h == 14 ? x : z;
+        return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+    }
 };
 }  // namespace pengen
