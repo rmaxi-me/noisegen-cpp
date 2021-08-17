@@ -19,15 +19,19 @@
 
 #include <perlin-noise-generator/Generator.hpp>
 #include <perlin-noise-generator/Settings.hpp>
+#include <perlin-noise-generator/ScopedProfiler.hpp>
+#include <perlin-noise-generator/Exception.hpp>
 
-int main(int argc, const char *const *const argv)
+static pengen::Settings parseArguments(int argc, const char *const *const argv)
 {
-    // constexpr auto strToInt = [](const std::string &value) { return std::stoi(value); };
+    PENGEN_SCOPED_PROFILER("parseArguments()");
 
+    pengen::Settings settings{};
+
+    // constexpr auto strToInt = [](const std::string &value) { return std::stoi(value); };
     constexpr auto strToUInt32 = [](const std::string &value) { return static_cast<uint32_t>(std::stoul(value)); };
     constexpr auto strToDouble = [](const std::string &value) { return std::stod(value); };
 
-    pengen::Settings settings{};
     argparse::ArgumentParser program{argv[0]};
 
     program
@@ -86,12 +90,12 @@ int main(int argc, const char *const *const argv)
     {
         std::cerr << program;
         std::cerr << "\nerror: " << e.what() << '\n';
-        return 1;
+        throw pengen::ArgumentParseException{};
     } catch (const std::invalid_argument &e)
     {
         std::cerr << program;
         std::cerr << "\nerror: invalid argument: " << e.what() << '\n';
-        return 1;
+        throw pengen::ArgumentParseException{};
     }
 
     settings.width = program.get<uint32_t>("width");
@@ -107,10 +111,27 @@ int main(int argc, const char *const *const argv)
 
     fmt::print("{}\n", settings.toString());
 
+    return settings;
+}
+
+int main(int argc, const char *const *const argv)
+{
+    PENGEN_SCOPED_PROFILER("main()");
+
+    pengen::Settings settings;
+
+    try
+    {
+        settings = parseArguments(argc, argv);
+    } catch (const pengen::ArgumentParseException &e)
+    {
+        return 1;
+    }
+
     pengen::Generator generator{settings};
 
     generator.generate();
-    generator.saveToPGM(output.c_str());
+    generator.saveToPGM("output.pgm");
 
     return 0;
 }

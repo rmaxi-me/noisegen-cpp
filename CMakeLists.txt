@@ -17,12 +17,13 @@ include_directories(SYSTEM "${CONAN_INCLUDE_DIRS}")
 
 include(cmake/flags.cmake)
 
-option(PNG_BUILD_EXECUTABLE "Build Executable" ON)
-option(PNG_BUILD_SHARED_LIB "Build Shared Library" ON) # TODO: implement this
+option(PENGEN_WITH_PROFILER "Enable scoped profiler" OFF)
+option(PENGEN_BUILD_EXECUTABLE "Build Executable" ON)
+option(PENGEN_BUILD_SHARED_LIB "Build Shared Library" ON) # TODO: implement this
 
 add_subdirectory(lib)
 include_directories(lib/include)
 
-if (${PNG_BUILD_EXECUTABLE})
+if (${PENGEN_BUILD_EXECUTABLE})
     add_subdirectory(exe)
 endif ()
