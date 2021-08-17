@@ -19,6 +19,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 
 #include "ScopedProfiler.hpp"
 
@@ -32,12 +33,12 @@ pengen::utils::ScopedProfiler::~ScopedProfiler()
     const DurationSeconds durationSeconds = end - m_start;
     const DurationMillis durationMillis = durationSeconds;
 
-    auto stream = std::ostringstream{};
+    std::ostringstream oss{};
 
     /*if (durationSeconds.count() >= 1)
-        stream << durationSeconds.count() << "s";
+        oss << durationSeconds.count() << "s";
     else*/
-    stream << durationMillis.count() << "ms";
+    oss << durationMillis.count() << "ms";
 
-    std::cerr << m_name << " => " << stream.str() << '\n';
+    std::cerr << m_name << " => " << oss.str() << '\n';
 }
