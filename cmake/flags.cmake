@@ -13,8 +13,10 @@ else ()
     add_compile_definitions(RELEASE=1)
 endif ()
 
-if (${RELEASE_WITH_PROFILER})
-    add_compile_definitions(RELEASE_WITH_PROFILER=1)
+if (${PENGEN_WITH_PROFILER})
+    add_compile_definitions(PENGEN_WITH_PROFILER=1)
+else ()
+    add_compile_definitions(PENGEN_WITH_PROFILER=0)
 endif ()
 
 if (MSVC)

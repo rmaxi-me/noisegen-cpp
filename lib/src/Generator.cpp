@@ -21,6 +21,7 @@
 #include <iostream>
 
 #include "Generator.hpp"
+#include "ScopedProfiler.hpp"
 
 /*
  * This implementation is based on Ken Perlin's original implementation.
@@ -32,6 +33,8 @@
 pengen::Generator::Generator(const Settings &settings, const PermutationArray &permutationArray)
     : m_settings{settings}, m_permutations{s_KenPerlinPermutations}
 {
+    PENGEN_SCOPED_PROFILER("Generator()");
+
     if (permutationArray == s_PseudoRandomPermutations)
         shufflePermutationArray();
     else if (permutationArray != s_KenPerlinPermutations)
@@ -69,6 +72,8 @@ double pengen::Generator::noise(double x, double y, double z) const noexcept
 
 void pengen::Generator::generate()
 {
+    PENGEN_SCOPED_PROFILER("Generator::generate()");
+
     // keep track of min and max value for scaling later
     m_minNoiseValue = std::numeric_limits<double>::max();
     m_maxNoiseValue = std::numeric_limits<double>::min();
@@ -96,6 +101,8 @@ void pengen::Generator::generate()
 
 void pengen::Generator::saveToPGM(const char *filepath) const
 {
+    PENGEN_SCOPED_PROFILER("Generator::saveToPGM()");
+
     std::ofstream file{filepath};
 
     file << "P2\n"                                                //

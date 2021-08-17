@@ -13,6 +13,7 @@ jobs:
       matrix:
         os: [ ubuntu-20.04, macos-10.15, windows-2019 ]
         mode: [ "Debug", "Release" ]
+        profiler: [ "ON", "OFF" ]
         include:
           - os: ubuntu-20.04
             pip-path: ~/.cache/pip
@@ -54,7 +55,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.mode }} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.mode }} -DPENGEN_WITH_PROFILER=${{ matrix.profiler }} ..
 
       - name: Build
         working-directory: build
