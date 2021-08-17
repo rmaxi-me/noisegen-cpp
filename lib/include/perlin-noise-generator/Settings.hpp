@@ -22,10 +22,11 @@
 #include <cstdint>
 
 namespace pengen {
-class Settings
+struct Settings
 {
-private:
-    uint32_t m_width;
-    uint32_t m_height;
+    uint32_t width;
+    uint32_t height;
+    uint32_t frequency;
+    uint32_t octaves;
 };
 }  // namespace pengen
