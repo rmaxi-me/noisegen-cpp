@@ -15,26 +15,84 @@
 */
 
 #include <fmt/core.h>
+#include <argparse.hpp>
 
 #include <perlin-noise-generator/Generator.hpp>
+#include <perlin-noise-generator/Settings.hpp>
 
-int main()
+int main(int argc, const char *const *const argv)
 {
-    pengen::Generator perlinGenerator{1920, 1080};
+    // constexpr auto strToInt = [](const std::string &value) { return std::stoi(value); };
+    constexpr auto strToUInt = [](const std::string &value) {
+        auto result = std::stoi(value);
 
-    perlinGenerator.printPermutationArray();
+        if (result < 0)
+            throw std::invalid_argument("expected positive number");
+        return result;
+    };
 
-    fmt::print("\n");
-    perlinGenerator.shufflePermutationArray();
-    perlinGenerator.printPermutationArray();
+    argparse::ArgumentParser program{argv[0]};
 
-    fmt::print("\n");
-    perlinGenerator.shufflePermutationArray();
-    perlinGenerator.printPermutationArray();
+    program
+      .add_argument("width")                   //
+      .help("width of the image to generate")  //
+      .action(strToUInt);
+    program
+      .add_argument("height")                   //
+      .help("height of the image to generate")  //
+      .action(strToUInt);
 
-    fmt::print("\n");
-    perlinGenerator.shufflePermutationArray();
-    perlinGenerator.printPermutationArray();
+    program
+      .add_argument("-o", "--output")  //
+      .help("output file name")        //
+      .default_value(std::string{"output.bmp"});
+    program
+      .add_argument("-f", "--frequency")  //
+      .help("noise frequency")            //
+      .default_value(0)                   //
+      .action(strToUInt);
+    program
+      .add_argument("-a", "--octaves")  //
+      .help("octaves")                  //
+      .default_value(0)                 //
+      .action(strToUInt);
+    program
+      .add_argument("-n", "--count")  //
+      .help("generate N images")      //
+      .default_value(1)               //
+      .action(strToUInt);
+    program
+      .add_argument("-j", "--jobs")                             //
+      .help("(for N > 1) max concurrent jobs, use 0 for auto")  //
+      .default_value(1)                                         //
+      .action(strToUInt);
+
+    try
+    {
+        program.parse_args(argc, argv);
+    } catch (const std::runtime_error &e)
+    {
+        std::cerr << program;
+        std::cerr << "\nerror: " << e.what() << '\n';
+        return 1;
+    } catch (const std::invalid_argument &e)
+    {
+        std::cerr << program;
+        std::cerr << "\nerror: invalid argument: " << e.what() << '\n';
+        return 1;
+    }
+
+    pengen::Settings settings{};
+    settings.width = program.get<int>("width");
+    settings.height = program.get<int>("height");
+    settings.frequency = program.get<int>("--frequency");
+    settings.octaves = program.get<int>("--octaves");
+    const auto output = program.get<std::string>("--output");
+    const auto count = program.get<int>("--count");
+    const auto jobs = program.get<int>("--jobs");
+
+    fmt::print("{} {} {} {} {} {} {}\n", settings.width, settings.height, settings.frequency, settings.octaves, output,
+               count, jobs);
 
     return 0;
 }
