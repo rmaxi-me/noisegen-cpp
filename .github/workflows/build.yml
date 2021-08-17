@@ -58,4 +58,4 @@ jobs:
 
       - name: Build
         working-directory: build
-        run: cmake --build .
+        run: cmake --build . --config ${{ matrix.mode }}
