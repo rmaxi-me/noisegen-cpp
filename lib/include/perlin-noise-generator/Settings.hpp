@@ -20,13 +20,21 @@
 #pragma once
 
 #include <cstdint>
+#include <ostream>
 
 namespace pengen {
 struct Settings
 {
-    uint32_t width;
-    uint32_t height;
-    uint32_t frequency;
-    uint32_t octaves;
+    uint32_t width{};
+    uint32_t height{};
+
+    uint32_t octaves{1};
+    double frequency{1.0};
+    double amplitude{1.0};
+    double persistence{0.5};
+
+    [[nodiscard]] std::string toString() const;
 };
+
+std::ostream &operator<<(std::ostream &os, const pengen::Settings &settings);
 }  // namespace pengen

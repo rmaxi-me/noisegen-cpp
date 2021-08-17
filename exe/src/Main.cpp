@@ -23,49 +23,61 @@
 int main(int argc, const char *const *const argv)
 {
     // constexpr auto strToInt = [](const std::string &value) { return std::stoi(value); };
-    constexpr auto strToUInt = [](const std::string &value) {
-        auto result = std::stoi(value);
 
-        if (result < 0)
-            throw std::invalid_argument("expected positive number");
-        return result;
-    };
+    constexpr auto strToUInt32 = [](const std::string &value) { return static_cast<uint32_t>(std::stoul(value)); };
+    constexpr auto strToDouble = [](const std::string &value) { return std::stod(value); };
 
+    pengen::Settings settings{};
     argparse::ArgumentParser program{argv[0]};
 
     program
       .add_argument("width")                   //
       .help("width of the image to generate")  //
-      .action(strToUInt);
+      .action(strToUInt32);
     program
       .add_argument("height")                   //
       .help("height of the image to generate")  //
-      .action(strToUInt);
+      .action(strToUInt32);
 
     program
       .add_argument("-o", "--output")  //
       .help("output file name")        //
-      .default_value(std::string{"output.bmp"});
+      .default_value(std::string{"output.pgm"});
     program
       .add_argument("-f", "--frequency")  //
       .help("noise frequency")            //
-      .default_value(0)                   //
-      .action(strToUInt);
+      .default_value(settings.frequency)  //
+      .action(strToDouble);
     program
-      .add_argument("-a", "--octaves")  //
+      .add_argument("-a", "--amplitude")  //
+      .help("noise amplitude")            //
+      .default_value(1.0)                 //
+      .action(strToDouble);
+    program
+      .add_argument("-O", "--octaves")  //
       .help("octaves")                  //
-      .default_value(0)                 //
-      .action(strToUInt);
+      .default_value(1u)                //
+      .action(strToUInt32);
+    program
+      .add_argument("-p", "--persistence")  //
+      .help("persistence")                  //
+      .default_value(0.5)                   //
+      .action(strToDouble);
     program
       .add_argument("-n", "--count")  //
       .help("generate N images")      //
-      .default_value(1)               //
-      .action(strToUInt);
+      .default_value(1u)              //
+      .action(strToUInt32);
     program
       .add_argument("-j", "--jobs")                             //
       .help("(for N > 1) max concurrent jobs, use 0 for auto")  //
-      .default_value(1)                                         //
-      .action(strToUInt);
+      .default_value(1u)                                        //
+      .action(strToUInt32);
+    program
+      .add_argument("-k", "--kenperlin")                                     //
+      .help("use Ken Perlin's permutation array instead of a shuffled one")  //
+      .default_value(false)                                                  //
+      .implicit_value(true);
 
     try
     {
@@ -82,17 +94,23 @@ int main(int argc, const char *const *const argv)
         return 1;
     }
 
-    pengen::Settings settings{};
-    settings.width = program.get<int>("width");
-    settings.height = program.get<int>("height");
-    settings.frequency = program.get<int>("--frequency");
-    settings.octaves = program.get<int>("--octaves");
-    const auto output = program.get<std::string>("--output");
-    const auto count = program.get<int>("--count");
-    const auto jobs = program.get<int>("--jobs");
+    settings.width = program.get<uint32_t>("width");
+    settings.height = program.get<uint32_t>("height");
+    settings.octaves = program.get<uint32_t>("--octaves");
+    settings.frequency = program.get<double>("--frequency");
+    settings.amplitude = program.get<double>("--amplitude");
+    settings.persistence = program.get<double>("--persistence");
 
-    fmt::print("{} {} {} {} {} {} {}\n", settings.width, settings.height, settings.frequency, settings.octaves, output,
-               count, jobs);
+    const auto output = program.get<std::string>("--output");
+    [[maybe_unused]] const auto count = program.get<uint32_t>("--count");
+    [[maybe_unused]] const auto jobs = program.get<uint32_t>("--jobs");
+
+    fmt::print("{}\n", settings.toString());
+
+    pengen::Generator generator{settings};
+
+    generator.generate();
+    generator.saveToPGM(output.c_str());
 
     return 0;
 }
