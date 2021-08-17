@@ -4,6 +4,7 @@ argparse/2.1
 
 [options]
 # fmt:header_only=True  # FIXME: 'False' does not compile in release mode on macOS and Windows.
+fmt:shared=False
 
 [generators]
 cmake
