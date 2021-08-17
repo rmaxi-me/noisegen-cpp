@@ -22,6 +22,7 @@
 
 int main(int argc, const char *const *const argv)
 {
+    // constexpr auto strToInt = [](const std::string &value) { return std::stoi(value); };
     constexpr auto strToUInt = [](const std::string &value) {
         auto result = std::stoi(value);
 
@@ -55,6 +56,16 @@ int main(int argc, const char *const *const argv)
       .help("octaves")                  //
       .default_value(0)                 //
       .action(strToUInt);
+    program
+      .add_argument("-n", "--count")  //
+      .help("generate N images")      //
+      .default_value(1)               //
+      .action(strToUInt);
+    program
+      .add_argument("-j", "--jobs")                             //
+      .help("(for N > 1) max concurrent jobs, use 0 for auto")  //
+      .default_value(1)                                         //
+      .action(strToUInt);
 
     try
     {
@@ -77,8 +88,11 @@ int main(int argc, const char *const *const argv)
     settings.frequency = program.get<int>("--frequency");
     settings.octaves = program.get<int>("--octaves");
     const auto output = program.get<std::string>("--output");
+    const auto count = program.get<int>("--count");
+    const auto jobs = program.get<int>("--jobs");
 
-    fmt::print("{} {} {} {} {}\n", settings.width, settings.height, settings.frequency, settings.octaves, output);
+    fmt::print("{} {} {} {} {} {} {}\n", settings.width, settings.height, settings.frequency, settings.octaves, output,
+               count, jobs);
 
     return 0;
 }
