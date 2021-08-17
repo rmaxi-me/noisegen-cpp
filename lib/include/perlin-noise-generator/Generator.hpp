@@ -20,6 +20,7 @@
 #include <random>
 #include <cstddef>
 #include <cstdint>
+#include <algorithm>
 
 #include "Random.hpp"
 
