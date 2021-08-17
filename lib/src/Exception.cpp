@@ -19,18 +19,15 @@
 
 #include "Exception.hpp"
 
-pengen::Exception::Exception(const char *what)
-    : m_what{what}
+pengen::Exception::Exception(const char *what) : m_what{what}
 {
 }
 
-pengen::Exception::Exception(std::string_view what)
-  : m_what{what}
+pengen::Exception::Exception(std::string_view what) : m_what{what}
 {
 }
 
-pengen::Exception::Exception(std::string what)
-  : m_what{std::move(what)}
+pengen::Exception::Exception(std::string what) : m_what{std::move(what)}
 {
 }
 

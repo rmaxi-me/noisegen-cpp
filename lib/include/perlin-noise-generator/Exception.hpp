@@ -35,6 +35,7 @@ public:
     ~Exception() override = default;
 
     [[nodiscard]] const char *what() const noexcept override;
+
 protected:
     std::string m_what{"pengen exception"};
 };

@@ -52,8 +52,8 @@ public:
 #define PENGEN_SCOPED_PROFILER_COMB1(x, y) x##y
 #define PENGEN_SCOPED_PROFILER_COMB(x, y)  PENGEN_SCOPED_PROFILER_COMB1(x, y)
 
-#define PENGEN_SCOPED_PROFILER(x) const pengen::utils::ScopedProfiler \
-                                        PENGEN_SCOPED_PROFILER_COMB(PENGEN_SCOPED_PROFILER_, __LINE__)(x)
+#define PENGEN_SCOPED_PROFILER(x) \
+    const pengen::utils::ScopedProfiler PENGEN_SCOPED_PROFILER_COMB(PENGEN_SCOPED_PROFILER_, __LINE__)(x)
 #else
 #define PENGEN_SCOPED_PROFILER(x)     (void) 0
 #define PENGEN_SCOPED_PROFILER_DTOR() (void) 0
