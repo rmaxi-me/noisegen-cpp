@@ -1,4 +1,4 @@
-add_compile_definitions(FMT_HEADER_ONLY)
+# add_compile_definitions(FMT_HEADER_ONLY)
 
 if (UNIX)
     if (NOT APPLE)
