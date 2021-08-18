@@ -19,6 +19,7 @@
 #include <limits>
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 #include "Generator.hpp"
 #include "ScopedProfiler.hpp"
@@ -30,15 +31,15 @@
  * Original implementation: https://mrl.cs.nyu.edu/~perlin/noise/
  */
 
-pengen::Generator::Generator(const Settings &settings, const PermutationArray &permutationArray)
-    : m_settings{settings}, m_permutations{s_KenPerlinPermutations}
+pengen::Generator::Generator(Settings settings, const std::optional<PermutationArray> &permutationArrayOverride)
+    : m_settings{std::move(settings)}
 {
     PENGEN_SCOPED_PROFILER("Generator()");
 
-    if (permutationArray == s_PseudoRandomPermutations)
+    if (permutationArrayOverride.has_value())
+        m_permutations = permutationArrayOverride.value();
+    else if (!settings.bUseKenPerlinPermutations)
         shufflePermutationArray();
-    else if (permutationArray != s_KenPerlinPermutations)
-        m_permutations = permutationArray;
 }
 
 double pengen::Generator::noise(double x, double y, double z) const noexcept
@@ -99,11 +100,11 @@ void pengen::Generator::generate()
     }
 }
 
-void pengen::Generator::saveToPGM(const char *filepath) const
+void pengen::Generator::saveToPGM() const
 {
     PENGEN_SCOPED_PROFILER("Generator::saveToPGM()");
 
-    std::ofstream file{filepath};
+    std::ofstream file{m_settings.outputFile};
 
     file << "P2\n"                                                //
          << m_settings.width << ' ' << m_settings.height << '\n'  //

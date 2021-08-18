@@ -104,10 +104,10 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
     settings.frequency = program.get<double>("--frequency");
     settings.amplitude = program.get<double>("--amplitude");
     settings.persistence = program.get<double>("--persistence");
-
-    const auto output = program.get<std::string>("--output");
-    [[maybe_unused]] const auto count = program.get<uint32_t>("--count");
-    [[maybe_unused]] const auto jobs = program.get<uint32_t>("--jobs");
+    settings.outputFile = program.get<std::string>("--output");
+    settings.count = program.get<uint32_t>("--count");
+    settings.jobs = program.get<uint32_t>("--jobs");
+    settings.bUseKenPerlinPermutations = program.get<bool>("--kenperlin");
 
     fmt::print("{}\n", settings.toString());
 
@@ -131,7 +131,7 @@ int main(int argc, const char *const *const argv)
     pengen::Generator generator{settings};
 
     generator.generate();
-    generator.saveToPGM("output.pgm");
+    generator.saveToPGM();
 
     return 0;
 }

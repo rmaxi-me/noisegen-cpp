@@ -33,6 +33,14 @@ struct Settings
     double amplitude{1.0};
     double persistence{0.5};
 
+    uint32_t count{1};
+    uint32_t jobs{1};
+
+    bool bUseKenPerlinPermutations{false};
+    std::string outputFile{"output.pgm"};
+
+    // Utility functions
+
     [[nodiscard]] std::string toString() const;
 };
 
