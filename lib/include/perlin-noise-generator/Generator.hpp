@@ -21,10 +21,12 @@
 #include <random>
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <algorithm>
 
 #include "Random.hpp"
 #include "Settings.hpp"
+#include "ScopedProfiler.hpp"
 
 /*
  * This implementation is based on Ken Perlin's original implementation.
@@ -55,17 +57,19 @@ public:
       242, 193, 238, 210, 144, 12,  191, 179, 162, 241, 81,  51,  145, 235, 249, 14,  239, 107, 49,  192, 214, 31,
       181, 199, 106, 157, 184, 84,  204, 176, 115, 121, 50,  45,  127, 4,   150, 254, 138, 236, 205, 93,  222, 114,
       67,  29,  24,  72,  243, 141, 128, 195, 78,  66,  215, 61,  156, 180};
-    static constexpr PermutationArray s_PseudoRandomPermutations{};
 
-    explicit Generator(const Settings &settings, const PermutationArray &permutationArray = s_PseudoRandomPermutations);
+    explicit Generator(Settings settings,
+                       const std::optional<PermutationArray> &permutationArrayOverride = std::nullopt);
 
     void generate();
-    [[nodiscard]] double noise(double x, double y, double z) const noexcept;
-    void saveToPGM(const char *filepath) const;
+    void saveToPGM() const;
+    [[nodiscard]] double noise3D(double x, double y, double z) const noexcept;
 
     template<typename Gen>
     void shufflePermutationArray(Gen &&generator)
     {
+        PENGEN_SCOPED_PROFILER("Generator::shufflePermutationArray()");
+
         std::shuffle(m_permutations.begin(), m_permutations.end(), std::forward<Gen>(generator));
     }
     inline void shufflePermutationArray() { shufflePermutationArray(Random::s_generator); }
@@ -76,9 +80,14 @@ private:
     Settings m_settings;
     PermutationArray m_permutations = s_KenPerlinPermutations;
 
+    std::vector<double> m_frequencyCache{};
+    std::vector<double> m_amplitudeCache{};
+
     std::vector<std::vector<double>> m_result{};
     double m_minNoiseValue{};
     double m_maxNoiseValue{};
+
+    void cacheFrequencyAndAmplitude();
 
     /**
      * Get a permutation value from the array.
@@ -90,6 +99,8 @@ private:
     {
         return m_permutations[index % m_permutations.size()];
     }
+
+    [[nodiscard]] inline const Settings &getSettings() const noexcept { return m_settings; }
 
     static inline constexpr double fade(double t) noexcept { return t * t * t * (t * (t * 6 - 15) + 10); }
     static inline constexpr double lerp(double t, double a, double b) noexcept { return a + t * (b - a); }
