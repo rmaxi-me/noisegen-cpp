@@ -101,7 +101,7 @@ private:
         return m_permutations[index % m_permutations.size()];
     }
 
-    static inline constexpr double fade(double t) noexcept { return t * t * t * (t * (t * 6 - 15) + 10); }
+    static inline constexpr double fade(double t) noexcept { return t * t * t * (t * (t * 6.0 - 15.0) + 10.0); }
     static inline constexpr double lerp(double t, double a, double b) noexcept { return a + t * (b - a); }
     static inline constexpr double grad(int hash, double x, double y, double z) noexcept
     {
