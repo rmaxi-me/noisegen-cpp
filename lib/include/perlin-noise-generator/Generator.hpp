@@ -74,6 +74,7 @@ public:
     }
     inline void shufflePermutationArray() { shufflePermutationArray(Random::s_generator); }
 
+    [[nodiscard]] inline const Settings &getSettings() const noexcept { return m_settings; }
     [[nodiscard]] inline const PermutationArray &getPermutationArray() const noexcept { return m_permutations; }
 
 private:
@@ -99,8 +100,6 @@ private:
     {
         return m_permutations[index % m_permutations.size()];
     }
-
-    [[nodiscard]] inline const Settings &getSettings() const noexcept { return m_settings; }
 
     static inline constexpr double fade(double t) noexcept { return t * t * t * (t * (t * 6 - 15) + 10); }
     static inline constexpr double lerp(double t, double a, double b) noexcept { return a + t * (b - a); }
