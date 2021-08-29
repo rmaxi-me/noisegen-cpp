@@ -36,6 +36,16 @@
  */
 
 namespace pengen {
+struct Pixel
+{
+    uint32_t x{};
+    uint32_t y{};
+    double value{};
+
+    explicit Pixel(double value) : value{value} {}
+    Pixel(uint32_t x, uint32_t y) : x{x}, y{y} {}
+    Pixel(uint32_t x, uint32_t y, double value) : x{x}, y{y}, value{value} {}
+};
 class Generator
 {
 public:
@@ -84,7 +94,7 @@ private:
     std::vector<double> m_frequencyCache{};
     std::vector<double> m_amplitudeCache{};
 
-    std::vector<std::vector<double>> m_result{};
+    std::vector<Pixel> m_result{};
     double m_minNoiseValue{};
     double m_maxNoiseValue{};
 
