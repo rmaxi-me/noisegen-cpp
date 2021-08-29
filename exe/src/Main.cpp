@@ -97,8 +97,6 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
     settings.jobs = program.get<uint32_t>("--jobs");
     settings.bUseKenPerlinPermutations = program.get<bool>("--kenperlin");
 
-    fmt::print("{}\n", settings.toString());
-
     return settings;
 }
 
@@ -111,7 +109,7 @@ int main(int argc, const char *const *const argv)
     try
     {
         settings = parseArguments(argc, argv);
-    } catch (const pengen::ArgumentParseException &e)
+    } catch (const pengen::ArgumentParseException &)
     {
         return 1;
     }
