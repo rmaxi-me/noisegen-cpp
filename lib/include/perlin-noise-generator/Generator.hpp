@@ -63,7 +63,7 @@ public:
 
     void generate();
     void saveToPGM() const;
-    [[nodiscard]] double noise(double x, double y, double z) const noexcept;
+    [[nodiscard]] double noise3D(double x, double y, double z) const noexcept;
 
     template<typename Gen>
     void shufflePermutationArray(Gen &&generator)
@@ -80,9 +80,14 @@ private:
     Settings m_settings;
     PermutationArray m_permutations = s_KenPerlinPermutations;
 
+    std::vector<double> m_frequencyCache{};
+    std::vector<double> m_amplitudeCache{};
+
     std::vector<std::vector<double>> m_result{};
     double m_minNoiseValue{};
     double m_maxNoiseValue{};
+
+    void cacheFrequencyAndAmplitude();
 
     /**
      * Get a permutation value from the array.
@@ -94,6 +99,8 @@ private:
     {
         return m_permutations[index % m_permutations.size()];
     }
+
+    [[nodiscard]] inline const Settings &getSettings() const noexcept { return m_settings; }
 
     static inline constexpr double fade(double t) noexcept { return t * t * t * (t * (t * 6 - 15) + 10); }
     static inline constexpr double lerp(double t, double a, double b) noexcept { return a + t * (b - a); }

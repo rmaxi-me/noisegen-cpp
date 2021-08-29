@@ -14,8 +14,6 @@
 **   limitations under the License.
 */
 
-#include <fmt/core.h>
-
 #include <limits>
 #include <fstream>
 #include <iostream>
@@ -40,9 +38,11 @@ pengen::Generator::Generator(Settings settings, const std::optional<PermutationA
         m_permutations = permutationArrayOverride.value();
     else if (!settings.bUseKenPerlinPermutations)
         shufflePermutationArray();
+
+    cacheFrequencyAndAmplitude();
 }
 
-double pengen::Generator::noise(double x, double y, double z) const noexcept
+double pengen::Generator::noise3D(double x, double y, double z) const noexcept
 {
     int X = static_cast<int>(std::floor(x)) & 255;
     int Y = static_cast<int>(std::floor(y)) & 255;
@@ -86,11 +86,18 @@ void pengen::Generator::generate()
 
     for (uint32_t y = 0; y < m_settings.height; y++)
     {
-        m_result[y].reserve(m_settings.width);  // only need storage since we will overwrite the value anyway
+        m_result[y].reserve(m_settings.width);  // only need storage since we would overwrite the value anyway
 
         for (uint32_t x = 0; x < m_settings.width; x++)
         {
-            auto noiseValue = noise(x * invWidth * m_settings.frequency, y * invHeight * m_settings.frequency, 0);
+            double noiseValue = 0.0;
+
+            for (uint32_t octave = 0; octave < m_settings.octaves; ++octave)
+            {
+                noiseValue +=
+                  noise3D(x * invWidth * m_frequencyCache[octave], y * invHeight * m_frequencyCache[octave], 0) *
+                  m_amplitudeCache[octave];
+            }
 
             m_minNoiseValue = std::min(m_minNoiseValue, noiseValue);
             m_maxNoiseValue = std::max(m_maxNoiseValue, noiseValue);
@@ -119,5 +126,17 @@ void pengen::Generator::saveToPGM() const
 
             file << grayscale << '\n';
         }
+    }
+}
+
+void pengen::Generator::cacheFrequencyAndAmplitude()
+{
+    m_frequencyCache.resize(m_settings.octaves);
+    m_amplitudeCache.resize(m_settings.octaves);
+
+    for (uint32_t octave = 0; octave < m_settings.octaves; octave++)
+    {
+        m_frequencyCache[octave] = std::pow(2, octave);
+        m_amplitudeCache[octave] = std::pow(m_settings.persistence, octave);
     }
 }

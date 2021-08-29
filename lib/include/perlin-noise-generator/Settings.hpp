@@ -28,9 +28,7 @@ struct Settings
     uint32_t width{};
     uint32_t height{};
 
-    uint32_t octaves{1};
-    double frequency{1.0};
-    double amplitude{1.0};
+    uint32_t octaves{8};
     double persistence{0.5};
 
     uint32_t count{1};

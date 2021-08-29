@@ -46,41 +46,31 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
     program
       .add_argument("-o", "--output")  //
       .help("output file name")        //
-      .default_value(std::string{"output.pgm"});
-    program
-      .add_argument("-f", "--frequency")  //
-      .help("noise frequency")            //
-      .default_value(settings.frequency)  //
-      .action(strToDouble);
-    program
-      .add_argument("-a", "--amplitude")  //
-      .help("noise amplitude")            //
-      .default_value(1.0)                 //
-      .action(strToDouble);
+      .default_value(settings.outputFile);
     program
       .add_argument("-O", "--octaves")  //
       .help("octaves")                  //
-      .default_value(1u)                //
+      .default_value(settings.octaves)  //
       .action(strToUInt32);
     program
       .add_argument("-p", "--persistence")  //
-      .help("persistence")                  //
-      .default_value(0.5)                   //
+      .help("noise persistence")            //
+      .default_value(settings.persistence)  //
       .action(strToDouble);
     program
       .add_argument("-n", "--count")  //
       .help("generate N images")      //
-      .default_value(1u)              //
+      .default_value(settings.count)  //
       .action(strToUInt32);
     program
       .add_argument("-j", "--jobs")                             //
       .help("(for N > 1) max concurrent jobs, use 0 for auto")  //
-      .default_value(1u)                                        //
+      .default_value(settings.jobs)                             //
       .action(strToUInt32);
     program
       .add_argument("-k", "--kenperlin")                                     //
       .help("use Ken Perlin's permutation array instead of a shuffled one")  //
-      .default_value(false)                                                  //
+      .default_value(settings.bUseKenPerlinPermutations)                     //
       .implicit_value(true);
 
     try
@@ -101,8 +91,6 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
     settings.width = program.get<uint32_t>("width");
     settings.height = program.get<uint32_t>("height");
     settings.octaves = program.get<uint32_t>("--octaves");
-    settings.frequency = program.get<double>("--frequency");
-    settings.amplitude = program.get<double>("--amplitude");
     settings.persistence = program.get<double>("--persistence");
     settings.outputFile = program.get<std::string>("--output");
     settings.count = program.get<uint32_t>("--count");
