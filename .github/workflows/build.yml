@@ -69,7 +69,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: output-test-${{ runner.os }}-${{ matrix.mode }}.pgm
+          name: output-test-${{ runner.os }}-${{ matrix.mode }}.zip
           path: ~/output.pgm
           if-no-files-found: error
           retention-days: 14
