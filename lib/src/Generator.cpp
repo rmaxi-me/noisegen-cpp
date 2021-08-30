@@ -88,7 +88,7 @@ void pengen::Generator::generate()
         for (uint32_t x = 0; x < m_settings.width; x++)
             m_pixels.emplace_back(x, y);
 
-    std::for_each(std::execution::par_unseq, m_result.begin(), m_result.end(), [&](auto &&pixel) {
+    std::for_each(std::execution::par_unseq, m_pixels.cbegin(), m_pixels.cend(), [&](auto &&pixel) {
         const auto x = pixel.x;
         const auto y = pixel.y;
         double noiseValue = 0.0;
