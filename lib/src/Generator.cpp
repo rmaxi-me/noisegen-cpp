@@ -83,10 +83,10 @@ void pengen::Generator::generate()
     const auto invWidth = 1.0 / m_settings.width;
     const auto invHeight = 1.0 / m_settings.height;
 
-    m_result.reserve(m_settings.width * m_settings.height);
+    m_pixels.reserve(m_settings.width * m_settings.height);
     for (uint32_t y = 0; y < m_settings.height; y++)
         for (uint32_t x = 0; x < m_settings.width; x++)
-            m_result.emplace_back(x, y);
+            m_pixels.emplace_back(x, y);
 
     std::for_each(std::execution::par_unseq, m_result.begin(), m_result.end(), [&](auto &&pixel) {
         const auto x = pixel.x;
@@ -103,7 +103,7 @@ void pengen::Generator::generate()
         m_minNoiseValue = std::min(m_minNoiseValue, noiseValue);
         m_maxNoiseValue = std::max(m_maxNoiseValue, noiseValue);
 
-        m_result[y * m_settings.width + x].value = noiseValue;
+        m_pixels[y * m_settings.width + x].value = noiseValue;
     });
 }
 
@@ -117,7 +117,7 @@ void pengen::Generator::saveToPGM() const
          << m_settings.width << ' ' << m_settings.height << '\n'  //
          << "255\n";
 
-    for (const auto &pixel : m_result)
+    for (const auto &pixel : m_pixels)
     {
         const auto grayscale =
           static_cast<int>(std::round((pixel.value - m_minNoiseValue) / (m_maxNoiseValue - m_minNoiseValue) * 255.0));

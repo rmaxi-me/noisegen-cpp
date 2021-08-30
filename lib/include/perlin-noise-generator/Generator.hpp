@@ -94,7 +94,7 @@ private:
     std::vector<double> m_frequencyCache{};
     std::vector<double> m_amplitudeCache{};
 
-    std::vector<Pixel> m_result{};
+    std::vector<Pixel> m_pixels{};
     double m_minNoiseValue{};
     double m_maxNoiseValue{};
 
