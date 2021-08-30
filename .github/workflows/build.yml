@@ -16,13 +16,13 @@ jobs:
         include:
           - os: ubuntu-20.04
             pip-path: ~/.cache/pip
-            exe-path: ./build/exe/pengen
+            exe-path: ./build/pengen
           - os: macos-10.15
             pip-path: ~/Library/Caches/pip
-            exe-path: ./build/exe/pengen
+            exe-path: ./build/pengen
           - os: windows-2019
             pip-path: ~\AppData\Local\pip\Cache
-            exe-path: ./build/exe/${{ matrix.mode }}/pengen.exe
+            exe-path: ./build/pengen.exe
 
     runs-on: ${{ matrix.os }}
 
