@@ -16,10 +16,13 @@ jobs:
         include:
           - os: ubuntu-20.04
             pip-path: ~/.cache/pip
+            exe-path: ./build/exe/pengen
           - os: macos-10.15
             pip-path: ~/Library/Caches/pip
+            exe-path: ./build/exe/pengen
           - os: windows-2019
             pip-path: ~\AppData\Local\pip\Cache
+            exe-path: ./build/exe/${{ matrix.mode }}/pengen.exe
 
     runs-on: ${{ matrix.os }}
 
@@ -54,8 +57,19 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.mode }} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.mode }} -DPENGEN_WITH_PROFILER=ON ..
 
       - name: Build
         working-directory: build
         run: cmake --build . --config ${{ matrix.mode }}
+
+      - name: Generate Test Image
+        run: ${{ matrix.exe-path }} --output ~/output.pgm 1024 1024
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: output-test-${{ runner.os }}-${{ matrix.mode }}.pgm
+          path: ~/output.pgm
+          if-no-files-found: error
+          retention-days: 14
