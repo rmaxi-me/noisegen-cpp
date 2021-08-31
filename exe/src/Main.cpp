@@ -63,11 +63,6 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
       .default_value(settings.count)  //
       .action(strToUInt32);
     program
-      .add_argument("-j", "--jobs")                             //
-      .help("(for N > 1) max concurrent jobs, use 0 for auto")  //
-      .default_value(settings.jobs)                             //
-      .action(strToUInt32);
-    program
       .add_argument("-k", "--kenperlin")                                     //
       .help("use Ken Perlin's permutation array instead of a shuffled one")  //
       .default_value(settings.bUseKenPerlinPermutations)                     //
@@ -94,7 +89,6 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
     settings.persistence = program.get<double>("--persistence");
     settings.outputFile = program.get<std::string>("--output");
     settings.count = program.get<uint32_t>("--count");
-    settings.jobs = program.get<uint32_t>("--jobs");
     settings.bUseKenPerlinPermutations = program.get<bool>("--kenperlin");
 
     return settings;
