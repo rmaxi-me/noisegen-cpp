@@ -49,7 +49,8 @@ struct Pixel
 class Generator
 {
 public:
-    using PermutationArray = std::array<uint8_t, 256>;
+    static constexpr size_t PermutationArraySize = 256;
+    using PermutationArray = std::array<uint8_t, PermutationArraySize>;
 
     /**
      * Default Ken Perlin's permutation array
@@ -73,7 +74,7 @@ public:
 
     void generate();
     void saveToPGM() const;
-    [[nodiscard]] double noise3D(double x, double y, double z) const noexcept;
+    [[nodiscard]] double noise3D(double x, double y, double z) const noexcept; // TODO: noise2D and noise1D
 
     template<typename Gen>
     void shufflePermutationArray(Gen &&generator)
@@ -104,15 +105,17 @@ private:
      * Get a permutation value from the array.
      * Allows index overflow for simpler operations with the array.
      * @param index for the array, allows overflow
-     * @return m_permutations array value, modulo m_permutations.size()
+     * @return m_permutations array value, modulo PermutationArraySize
      */
-    [[nodiscard]] inline uint8_t getPermutation(size_t index) const
+    [[nodiscard]] inline auto getPermutation(size_t index) const
     {
-        return m_permutations[index % m_permutations.size()];
+        return m_permutations[index % PermutationArraySize];
     }
 
     static inline constexpr double fade(double t) noexcept { return t * t * t * (t * (t * 6.0 - 15.0) + 10.0); }
+
     static inline constexpr double lerp(double t, double a, double b) noexcept { return a + t * (b - a); }
+
     static inline constexpr double grad(int hash, double x, double y, double z) noexcept
     {
         const int h = hash & 15;
