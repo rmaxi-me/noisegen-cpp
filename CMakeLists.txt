@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(perlin-noise-generator LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+if (NOT "${CMAKE_CXX_STANDARD}")
+    set(CMAKE_CXX_STANDARD 17)
+endif ()
 
 if (NOT CMAKE_BUILD_TYPE OR "${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE Release)
