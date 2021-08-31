@@ -27,10 +27,6 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Test
-        run: |
-          gcc --version
-          g++ --version
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
 
