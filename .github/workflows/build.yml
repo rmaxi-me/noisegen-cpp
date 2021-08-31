@@ -17,10 +17,11 @@ jobs:
           - os: ubuntu-20.04
             pip-path: ~/.cache/pip
             exe-path: ./build/pengen
+            cmake-args: -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10
           - os: macos-10.15
             pip-path: ~/Library/Caches/pip
             exe-path: ./build/pengen
-            cmake-args: -DCMAKE_C_COMPILER=gcc-11 -DCMAKE_CXX_COMPILER=g++-11  # See README.md
+            cmake-args: -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10  # See README.md
           - os: windows-2019
             pip-path: ~\AppData\Local\pip\Cache
             exe-path: ./build/pengen.exe
@@ -50,9 +51,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.conan
-          key: ${{ runner.os }}-conan-${{ matrix.mode }}-v4-${{ hashFiles('**/conanfile.txt') }}
+          key: ${{ runner.os }}-conan-${{ matrix.mode }}-v5-${{ hashFiles('**/conanfile.txt') }}
           restore-keys: |
-            ${{ runner.os }}-conan-${{ matrix.mode }}-v4-
+            ${{ runner.os }}-conan-${{ matrix.mode }}-v5-
 
       - name: Configure
         run: |
