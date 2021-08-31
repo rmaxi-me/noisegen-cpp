@@ -32,7 +32,6 @@ struct Settings
     double persistence{0.5};
 
     uint32_t count{1};
-    uint32_t jobs{1};
 
     bool bUseKenPerlinPermutations{false};
     std::string outputFile{"output.pgm"};

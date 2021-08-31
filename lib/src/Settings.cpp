@@ -24,7 +24,7 @@
 std::ostream &pengen::operator<<(std::ostream &os, const pengen::Settings &settings)
 {
     os << "width: " << settings.width << " height: " << settings.height << " octaves: " << settings.octaves
-       << " persistence: " << settings.persistence << " count: " << settings.count << " jobs: " << settings.jobs
+       << " persistence: " << settings.persistence << " count: " << settings.count
        << " bUseKenPerlinPermutations: " << settings.bUseKenPerlinPermutations
        << " outputFile: " << settings.outputFile;
     return os;

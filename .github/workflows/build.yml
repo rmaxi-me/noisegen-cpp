@@ -16,10 +16,15 @@ jobs:
         include:
           - os: ubuntu-20.04
             pip-path: ~/.cache/pip
+            exe-path: ./build/pengen
+            cmake-args: -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10
           - os: macos-10.15
             pip-path: ~/Library/Caches/pip
+            exe-path: ./build/pengen
+            cmake-args: -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10  # See README.md
           - os: windows-2019
             pip-path: ~\AppData\Local\pip\Cache
+            exe-path: ./build/pengen.exe
 
     runs-on: ${{ matrix.os }}
 
@@ -27,9 +32,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
 
-#      - name: apt dependencies
-#        run: sudo apt install -y libgtk2.0-dev
-#        if: startsWith(matrix.os, 'ubuntu')
+      - name: apt dependencies
+        run: sudo apt install -y libtbb-dev  # libgtk2.0-dev
+        if: startsWith(matrix.os, 'ubuntu')
 
       - name: Pip Cache
         uses: actions/cache@v2
@@ -46,16 +51,27 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.conan
-          key: ${{ runner.os }}-conan-${{ matrix.mode }}-v4-${{ hashFiles('**/conanfile.txt') }}
+          key: ${{ runner.os }}-conan-${{ matrix.mode }}-v5-${{ hashFiles('**/conanfile.txt') }}
           restore-keys: |
-            ${{ runner.os }}-conan-${{ matrix.mode }}-v4-
+            ${{ runner.os }}-conan-${{ matrix.mode }}-v5-
 
       - name: Configure
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.mode }} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.mode }} -DPENGEN_WITH_PROFILER=ON ${{ matrix.cmake-args }} ..
 
       - name: Build
         working-directory: build
         run: cmake --build . --config ${{ matrix.mode }}
+
+      - name: Generate Test Image
+        run: ${{ matrix.exe-path }} --output ~/output.pgm 1024 1024
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: output-test-${{ runner.os }}-${{ matrix.mode }}.zip
+          path: ~/output.pgm
+          if-no-files-found: error
+          retention-days: 14

@@ -15,9 +15,10 @@
 */
 
 #include <limits>
+#include <utility>
 #include <fstream>
 #include <iostream>
-#include <utility>
+#include <execution>
 
 #include "Generator.hpp"
 #include "ScopedProfiler.hpp"
@@ -82,29 +83,28 @@ void pengen::Generator::generate()
     const auto invWidth = 1.0 / m_settings.width;
     const auto invHeight = 1.0 / m_settings.height;
 
-    m_result.resize(m_settings.height);  // needs default constructed vectors
-
+    m_pixels.reserve(m_settings.width * m_settings.height);
     for (uint32_t y = 0; y < m_settings.height; y++)
-    {
-        m_result[y].reserve(m_settings.width);  // only need storage since we would overwrite the value anyway
-
         for (uint32_t x = 0; x < m_settings.width; x++)
+            m_pixels.emplace_back(x, y);
+
+    std::for_each(std::execution::par_unseq, m_pixels.cbegin(), m_pixels.cend(), [&](auto &&pixel) {
+        const auto x = pixel.x;
+        const auto y = pixel.y;
+        double noiseValue = 0.0;
+
+        for (uint32_t octave = 0; octave < m_settings.octaves; ++octave)
         {
-            double noiseValue = 0.0;
-
-            for (uint32_t octave = 0; octave < m_settings.octaves; ++octave)
-            {
-                noiseValue +=
-                  noise3D(x * invWidth * m_frequencyCache[octave], y * invHeight * m_frequencyCache[octave], 0) *
-                  m_amplitudeCache[octave];
-            }
-
-            m_minNoiseValue = std::min(m_minNoiseValue, noiseValue);
-            m_maxNoiseValue = std::max(m_maxNoiseValue, noiseValue);
-
-            m_result[y][x] = noiseValue;
+            noiseValue +=
+              noise3D(x * invWidth * m_frequencyCache[octave], y * invHeight * m_frequencyCache[octave], 0) *
+              m_amplitudeCache[octave];
         }
-    }
+
+        m_minNoiseValue = std::min(m_minNoiseValue, noiseValue);
+        m_maxNoiseValue = std::max(m_maxNoiseValue, noiseValue);
+
+        m_pixels[y * m_settings.width + x].value = noiseValue;
+    });
 }
 
 void pengen::Generator::saveToPGM() const
@@ -117,15 +117,12 @@ void pengen::Generator::saveToPGM() const
          << m_settings.width << ' ' << m_settings.height << '\n'  //
          << "255\n";
 
-    for (uint32_t y = 0; y < m_settings.height; y++)
+    for (const auto &pixel : m_pixels)
     {
-        for (uint32_t x = 0; x < m_settings.width; x++)
-        {
-            const auto grayscale = static_cast<int>(
-              std::round((m_result[y][x] - m_minNoiseValue) / (m_maxNoiseValue - m_minNoiseValue) * 255.0));
+        const auto grayscale =
+          static_cast<int>(std::round((pixel.value - m_minNoiseValue) / (m_maxNoiseValue - m_minNoiseValue) * 255.0));
 
-            file << grayscale << '\n';
-        }
+        file << grayscale << '\n';
     }
 }
 
