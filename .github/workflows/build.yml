@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-python@v2
 
       - name: apt dependencies
-        run: sudo apt install -y libtbb-dev  # libgtk2.0-dev
+        run: sudo apt install -y libtbb-dev libgtk2.0-dev
         if: startsWith(matrix.os, 'ubuntu')
 
       - name: Pip Cache
