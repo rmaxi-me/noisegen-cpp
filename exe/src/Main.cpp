@@ -67,6 +67,11 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
       .help("use Ken Perlin's permutation array instead of a shuffled one")  //
       .default_value(settings.bUseKenPerlinPermutations)                     //
       .implicit_value(true);
+    program
+      .add_argument("-d", "--dry-run")       //
+      .help("don't write anything to disk")  //
+      .default_value(settings.bDryRun)       //
+      .implicit_value(true);
 
     try
     {
@@ -89,6 +94,7 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
     settings.persistence = program.get<double>("--persistence");
     settings.outputFile = program.get<std::string>("--output");
     settings.count = program.get<uint32_t>("--count");
+    settings.bDryRun = program.get<bool>("--dry-run");
     settings.bUseKenPerlinPermutations = program.get<bool>("--kenperlin");
 
     return settings;
