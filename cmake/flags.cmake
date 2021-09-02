@@ -13,6 +13,12 @@ if (UNIX)
     endif ()
 endif ()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_definitions(PENGEN_HAS_EXEC_POLICIES=0)
+else ()
+    add_compile_definitions(PENGEN_HAS_EXEC_POLICIES=1)
+endif ()
+
 if (${CMAKE_BUILD_TYPE} MATCHES "Debug")
     add_compile_definitions(DEBUG=1)
 else ()
