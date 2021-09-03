@@ -25,7 +25,6 @@ macro(run_conan)
         # multiValueArgs
         BUILD missing
         INSTALL_ARGS
-        -s build_type=${CMAKE_BUILD_TYPE}
         REQUIRES ${CONAN_EXTRA_REQUIRES}
         OPTIONS ${CONAN_EXTRA_OPTIONS}
     )
