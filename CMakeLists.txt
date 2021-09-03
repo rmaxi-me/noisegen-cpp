@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(perlin-noise-generator LANGUAGES CXX)
+project(perlin-noise-generator)
 
 if (NOT "${CMAKE_CXX_STANDARD}")
     set(CMAKE_CXX_STANDARD 17)
@@ -8,7 +8,7 @@ endif ()
 if (NOT CMAKE_BUILD_TYPE OR "${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE Release)
 
-    message(WARNING "CMAKE_BUILD_TYPE undefined. Defaulting to Release.\nPossible values: [Debug, Release, MinSizeRel, RelWithDebInfo]")
+    message(WARNING "CMAKE_BUILD_TYPE undefined. Defaulting to Release.")
 endif ()
 
 include(conan/conan.cmake)
