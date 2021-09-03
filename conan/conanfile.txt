@@ -1,5 +1,5 @@
 [requires]
-cimg/2.9.4
+# cimg/2.9.4
 fmt/8.0.1
 argparse/2.1
 
