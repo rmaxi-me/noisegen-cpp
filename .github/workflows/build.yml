@@ -13,16 +13,21 @@ jobs:
       matrix:
         os: [ ubuntu-20.04, macos-10.15, windows-2019 ]
         mode: [ "Debug", "Release" ]
+        cppstd: [ 17, 20 ]
         include:
           - os: ubuntu-20.04
             pip-path: ~/.cache/pip
             exe-path: ./build/pengen
+            lib-path: ./build/libpengen.a
           - os: macos-10.15
             pip-path: ~/Library/Caches/pip
             exe-path: ./build/pengen
+            lib-path: ./build/libpengen.a
           - os: windows-2019
             pip-path: ~\AppData\Local\pip\Cache
             exe-path: ./build/pengen.exe
+            lib-path: ./build/libpengen.lib
+            pdb-path: ./build/*.pdb
 
     runs-on: ${{ matrix.os }}
 
@@ -46,9 +51,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.conan
-          key: ${{ runner.os }}-conan-${{ matrix.mode }}-v7-${{ hashFiles('**/conanfile.txt') }}
+          key: ${{ runner.os }}-conan-${{ matrix.mode }}-cpp${{ matrix.cppstd }}-${{ hashFiles('**/conanfile.txt') }}
           restore-keys: |
-            ${{ runner.os }}-conan-${{ matrix.mode }}-v7-
+            ${{ runner.os }}-conan-${{ matrix.mode }}-cpp${{ matrix.cppstd }}-
 
       - name: Install Pip Dependencies
         run: pip install -r requirements.txt
@@ -57,19 +62,30 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.mode }} -DPENGEN_WITH_PROFILER=ON ..
+          cmake -DCMAKE_CXX_STANDARD=${{ matrix.cppstd }} \
+                -DCMAKE_BUILD_TYPE=${{ matrix.mode }} \
+                -DPENGEN_WITH_PROFILER=ON ..
 
       - name: Build
         working-directory: build
         run: cmake --build . --config ${{ matrix.mode }}
 
-      - name: Generate Test Image
-        run: ${{ matrix.exe-path }} --output ~/output.pgm 1024 1024
+      - name: Generate Test Images
+        run: |
+          echo "Random:"
+          ${{ matrix.exe-path }} --output ./build/outputRandom.pgm 1024 1024
+          echo -e "\nKen Perlin:"
+          ${{ matrix.exe-path }} --output ./build/outputKenPerlin.pgm --kenperlin 1024 1024
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: output-test-${{ runner.os }}-${{ matrix.mode }}.zip
-          path: ~/output.pgm
-          if-no-files-found: error
+          name: ${{ runner.os }}-${{ matrix.mode }}-cpp${{ matrix.cppstd }}.zip
+          path: |
+            ./build/outputRandom.pgm
+            ./build/outputKenPerlin.pgm
+            ${{ matrix.exe-path }}
+            ${{ matrix.lib-path }}
+            ${{ matrix.pdb-path }}
+          if-no-files-found: warn
           retention-days: 14

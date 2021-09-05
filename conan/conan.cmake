@@ -25,6 +25,7 @@ macro(run_conan)
         # multiValueArgs
         BUILD missing
         INSTALL_ARGS
+        -s compiler.cppstd=${CMAKE_CXX_STANDARD}
         REQUIRES ${CONAN_EXTRA_REQUIRES}
         OPTIONS ${CONAN_EXTRA_OPTIONS}
     )
