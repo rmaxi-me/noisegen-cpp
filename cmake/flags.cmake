@@ -1,5 +1,3 @@
-# add_compile_definitions(FMT_HEADER_ONLY)
-
 if (UNIX)
     if (NOT APPLE)
         link_libraries(pthread stdc++fs tbb)
