@@ -21,7 +21,8 @@ include(cmake/flags.cmake)
 
 option(PENGEN_WITH_PROFILER "Enable scoped profiler" OFF)
 option(PENGEN_BUILD_EXECUTABLE "Build Executable" ON)
-option(PENGEN_BUILD_SHARED_LIB "Build Shared Library" ON) # TODO: implement this
+option(PENGEN_PCH "Use precompiled headers" ON)
+# option(PENGEN_BUILD_SHARED_LIB "Build Shared Library" ON) # TODO: implement this
 
 if (WIN32 OR WIN64)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/")

@@ -7,6 +7,5 @@
 * macOS\*
 
 > \* *Clang and Apple-Clang do not support `std::execution` yet.
-> This will make the program/lib way slower.
+> This will make the program/lib way slower on macOS / clang builds.
 > I tried using gcc on macOS, but I had dependency compiling issues. (can only test through GitHub Actions)
-> Contributions to improve this are welcome.
