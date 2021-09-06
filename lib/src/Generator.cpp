@@ -14,11 +14,17 @@
 **   limitations under the License.
 */
 
+#if PENGEN_HAS_EXEC_POLICIES
+    #include <execution>
+    #define PENGEN_EXEC_PAR_UNSEC std::execution::par_unseq,
+#else
+    #define PENGEN_EXEC_PAR_UNSEC
+#endif
+
 #include <limits>
 #include <utility>
 #include <fstream>
 #include <iostream>
-#include <execution>
 
 #include "Generator.hpp"
 #include "ScopedProfiler.hpp"
@@ -88,7 +94,7 @@ void pengen::Generator::generate()
         for (uint32_t x = 0; x < m_settings.width; x++)
             m_pixels.emplace_back(x, y);
 
-    std::for_each(std::execution::par_unseq, m_pixels.cbegin(), m_pixels.cend(), [&](auto &&pixel) {
+    std::transform(PENGEN_EXEC_PAR_UNSEC m_pixels.cbegin(), m_pixels.cend(), m_pixels.begin(), [&](auto &&pixel) {
         const auto x = pixel.x;
         const auto y = pixel.y;
         double noiseValue = 0.0;
@@ -100,11 +106,13 @@ void pengen::Generator::generate()
               m_amplitudeCache[octave];
         }
 
-        m_minNoiseValue = std::min(m_minNoiseValue, noiseValue);
-        m_maxNoiseValue = std::max(m_maxNoiseValue, noiseValue);
-
-        m_pixels[y * m_settings.width + x].value = noiseValue;
+        return Pixel(x, y, noiseValue);
     });
+
+    const auto [min, max] = std::minmax_element(m_pixels.cbegin(), m_pixels.cend());
+
+    m_minNoiseValue = min->value;
+    m_maxNoiseValue = max->value;
 }
 
 void pengen::Generator::saveToPGM() const
@@ -131,6 +139,8 @@ void pengen::Generator::saveToPGM() const
 
 void pengen::Generator::cacheFrequencyAndAmplitude()
 {
+    PENGEN_SCOPED_PROFILER("Generator::cacheFrequencyAndAmplitude()");
+
     m_frequencyCache.resize(m_settings.octaves);
     m_amplitudeCache.resize(m_settings.octaves);
 
