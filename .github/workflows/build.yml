@@ -62,14 +62,10 @@ jobs:
 
       # Workaround for macOS clang builds, I don't know why but dependencies think the project uses C++gnu98
       - name: Generate default Conan profile
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: startsWith(matrix.os, 'macos') && steps.cache.outputs.cache-hit != 'true'
         run: |
           conan profile new default --detect
-
-          if [[ $(${{ startsWith(matrix.os, 'macos') }}) ]]; then
-            conan profile update settings.compiler.cppstd=${{ matrix.cppstd }} default
-          fi
-
+          conan profile update settings.compiler.cppstd=${{ matrix.cppstd }} default
           cat ~/.conan/profiles/default
 
       - name: Configure
