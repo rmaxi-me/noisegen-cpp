@@ -111,6 +111,9 @@ void pengen::Generator::saveToPGM() const
 {
     PENGEN_SCOPED_PROFILER("Generator::saveToPGM()");
 
+    if (m_settings.bDryRun)
+        return;
+
     std::ofstream file{m_settings.outputFile};
 
     file << "P2\n"                                                //

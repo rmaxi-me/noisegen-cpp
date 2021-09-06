@@ -33,6 +33,7 @@ struct Settings
 
     uint32_t count{1};
 
+    bool bDryRun{false};
     bool bUseKenPerlinPermutations{false};
     std::string outputFile{"output.pgm"};
 
