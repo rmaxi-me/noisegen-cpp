@@ -46,6 +46,9 @@ struct Pixel
     Pixel(uint32_t x, uint32_t y) : x{x}, y{y} {}
     Pixel(uint32_t x, uint32_t y, double value) : x{x}, y{y}, value{value} {}
 
+    bool operator==(const Pixel &rhs) const noexcept { return value == rhs.value; }
+    bool operator!=(const Pixel &rhs) const noexcept { return !(rhs == *this); }
+
     bool operator<(const Pixel &rhs) const noexcept { return value < rhs.value; }
     bool operator>(const Pixel &rhs) const noexcept { return rhs < *this; }
     bool operator<=(const Pixel &rhs) const noexcept { return !(rhs < *this); }
