@@ -60,6 +60,7 @@ jobs:
       - name: Install Pip Dependencies
         run: pip install -r requirements.txt
 
+      # Workaround for macOS clang builds, I don't know why but dependencies think the project uses C++gnu98
       - name: Generate default Conan profile
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
@@ -85,18 +86,19 @@ jobs:
 
       - name: Generate Test Images
         run: |
+          mkdir -p generated-images
+
           echo "Random:"
-          ${{ matrix.exe-path }} --output ./build/outputRandom.pgm 1024 1024
-          echo -e "\nKen Perlin:"
-          ${{ matrix.exe-path }} --output ./build/outputKenPerlin.pgm --kenperlin 1024 1024
+          ${{ matrix.exe-path }} --output ./generated-images/random.pgm 1024 1024
+          echo "Ken Perlin:"
+          ${{ matrix.exe-path }} --output ./generated-images/kenperlin.pgm --kenperlin 1024 1024
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{ runner.os }}-${{ matrix.mode }}-cpp${{ matrix.cppstd }}.zip
           path: |
-            ./build/outputRandom.pgm
-            ./build/outputKenPerlin.pgm
+            ./generated-images/*
             ${{ matrix.exe-path }}
             ${{ matrix.lib-path }}
             ${{ matrix.pdb-path }}
