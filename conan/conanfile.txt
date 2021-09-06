@@ -3,6 +3,7 @@ cimg/2.9.4
 argparse/2.1
 
 [options]
+*:shared=False
 
 [generators]
 cmake
