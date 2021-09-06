@@ -24,6 +24,8 @@
 #include <optional>
 #include <algorithm>
 
+#include "PengenCImg.hpp"
+
 #include "Random.hpp"
 #include "Settings.hpp"
 #include "ScopedProfiler.hpp"

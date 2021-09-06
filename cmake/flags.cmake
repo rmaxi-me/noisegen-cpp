@@ -1,5 +1,3 @@
-# add_compile_definitions(FMT_HEADER_ONLY)
-
 if (UNIX)
     if (NOT APPLE)
         link_libraries(pthread stdc++fs tbb)
@@ -35,3 +33,5 @@ if (MSVC)
     add_link_options(/ignore:4099)
     #    link_libraries(legacy_stdio_definitions)
 endif ()
+
+add_compile_definitions(cimg_display=0) # Won't need to display anything through CImg

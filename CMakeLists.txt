@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 project(perlin-noise-generator LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+if (NOT "${CMAKE_CXX_STANDARD}")
+    set(CMAKE_CXX_STANDARD 17)
+endif ()
 
 if (NOT CMAKE_BUILD_TYPE OR "${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE Release)
 
-    message(WARNING "CMAKE_BUILD_TYPE undefined. Defaulting to Release.\nPossible values: [Debug, Release, MinSizeRel, RelWithDebInfo]")
+    message(WARNING "CMAKE_BUILD_TYPE undefined. Defaulting to Release.")
 endif ()
 
 include(conan/conan.cmake)
@@ -19,7 +21,8 @@ include(cmake/flags.cmake)
 
 option(PENGEN_WITH_PROFILER "Enable scoped profiler" OFF)
 option(PENGEN_BUILD_EXECUTABLE "Build Executable" ON)
-option(PENGEN_BUILD_SHARED_LIB "Build Shared Library" ON) # TODO: implement this
+option(PENGEN_PCH "Use precompiled headers" ON)
+# option(PENGEN_BUILD_SHARED_LIB "Build Shared Library" ON) # TODO: implement this
 
 if (WIN32 OR WIN64)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/")

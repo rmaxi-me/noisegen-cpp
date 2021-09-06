@@ -3,15 +3,17 @@
 macro(run_conan)
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan/conan.cmake")
         message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-        file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.15/conan.cmake"
+        file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
                 "${CMAKE_BINARY_DIR}/conan/conan.cmake")
     endif()
 
     include(${CMAKE_BINARY_DIR}/conan/conan.cmake)
 
-    set(_GLIBCXX_USE_CXX11_ABI)
-
     conan_add_remote(NAME bincrafters URL https://api.bintray.com/conan/bincrafters/public-conan)
+
+    if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
+        set(_GLIBCXX_USE_CXX11_ABI)
+    endif ()
 
     conan_cmake_run(
         # options
@@ -25,7 +27,6 @@ macro(run_conan)
         # multiValueArgs
         BUILD missing
         INSTALL_ARGS
-        -s build_type=${CMAKE_BUILD_TYPE}
         REQUIRES ${CONAN_EXTRA_REQUIRES}
         OPTIONS ${CONAN_EXTRA_OPTIONS}
     )

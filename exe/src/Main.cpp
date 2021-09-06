@@ -14,7 +14,6 @@
 **   limitations under the License.
 */
 
-#include <fmt/core.h>
 #include <argparse.hpp>
 
 #include <perlin-noise-generator/Generator.hpp>
