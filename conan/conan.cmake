@@ -15,14 +15,6 @@ macro(run_conan)
         set(_GLIBCXX_USE_CXX11_ABI)
     endif ()
 
-    if (${CMAKE_CXX_COMPILER_ID} STREQUAL AppleClang)
-        # Fixes build issue with conan on macOS by forcing cpp standard
-        # I don't know why it happens as it shouldn't, but this should be working consistently.
-        set(PENGEN_APPLE_CXXSTD "")
-    else ()
-        set(PENGEN_APPLE_CXXSTD "")
-    endif ()
-
     conan_cmake_run(
         # options
         BASIC_SETUP
@@ -35,7 +27,6 @@ macro(run_conan)
         # multiValueArgs
         BUILD missing
         INSTALL_ARGS
-        ${PENGEN_APPLE_CXXSTD}
         REQUIRES ${CONAN_EXTRA_REQUIRES}
         OPTIONS ${CONAN_EXTRA_OPTIONS}
     )
