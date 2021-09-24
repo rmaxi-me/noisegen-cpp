@@ -23,7 +23,7 @@
 #include <string>
 #include <string_view>
 
-namespace pengen {
+namespace noisegen {
 class Exception : public std::exception
 {
 public:
@@ -37,7 +37,7 @@ public:
     [[nodiscard]] const char *what() const noexcept override;
 
 protected:
-    std::string m_what{"pengen exception"};
+    std::string m_what{"noisegen exception"};
 };
 
 class ArgumentParseException : public Exception
@@ -48,4 +48,4 @@ public:
     explicit ArgumentParseException(std::string_view what);
     explicit ArgumentParseException(std::string what);
 };
-}  // namespace pengen
+}  // namespace noisegen

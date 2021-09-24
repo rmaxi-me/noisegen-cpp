@@ -23,11 +23,11 @@
 
 #include "ScopedProfiler.hpp"
 
-pengen::utils::ScopedProfiler::ScopedProfiler(const char *name) noexcept : m_start{Clock::now()}, m_name{name}
+noisegen::utils::ScopedProfiler::ScopedProfiler(const char *name) noexcept : m_start{Clock::now()}, m_name{name}
 {
 }
 
-pengen::utils::ScopedProfiler::~ScopedProfiler()
+noisegen::utils::ScopedProfiler::~ScopedProfiler()
 {
     const auto end = Clock::now();
     const DurationSeconds durationSeconds = end - m_start;

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(perlin-noise-generator)
+project(noisegen-cpp)
 
 if (NOT "${CMAKE_CXX_STANDARD}")
     set(CMAKE_CXX_STANDARD 17)
@@ -13,11 +13,11 @@ endif ()
 
 include(cmake/flags.cmake)
 
-option(PENGEN_BUILD_CLI "Build CLI" ON)
-option(PENGEN_BUILD_GUI "Build GUI" ON) # soon™️
+option(NOISEGEN_BUILD_CLI "Build CLI" ON)
+option(NOISEGEN_BUILD_GUI "Build GUI" ON) # soon™️
 
-option(PENGEN_WITH_PROFILER "Enable scoped profiler" OFF)
-# option(PENGEN_BUILD_SHARED_LIB "Build Shared Library" ON) # TODO: implement this
+option(NOISEGEN_WITH_PROFILER "Enable scoped profiler" OFF)
+# option(NOISEGEN_BUILD_SHARED_LIB "Build Shared Library" ON) # TODO: implement this
 
 if (WIN32 OR WIN64)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/")
@@ -35,6 +35,6 @@ endif ()
 add_subdirectory(lib)
 include_directories(lib/include)
 
-if (${PENGEN_BUILD_CLI})
+if (${NOISEGEN_BUILD_CLI})
     add_subdirectory(cli)
 endif ()

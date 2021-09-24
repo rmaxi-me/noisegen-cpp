@@ -35,7 +35,7 @@
  * Original implementation: https://mrl.cs.nyu.edu/~perlin/noise/
  */
 
-namespace pengen {
+namespace noisegen {
 struct Pixel
 {
     uint32_t x{};
@@ -87,7 +87,7 @@ public:
     template<typename Gen>
     void shufflePermutationArray(Gen &&generator)
     {
-        PENGEN_SCOPED_PROFILER("Generator::shufflePermutationArray()");
+        NOISEGEN_SCOPED_PROFILER("Generator::shufflePermutationArray()");
 
         std::shuffle(m_permutations.begin(), m_permutations.end(), std::forward<Gen>(generator));
     }
@@ -131,4 +131,4 @@ private:
         return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
     }
 };
-}  // namespace pengen
+}  // namespace noisegen

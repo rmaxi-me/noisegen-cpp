@@ -19,5 +19,5 @@
 
 #include "Random.hpp"
 
-std::random_device pengen::Random::s_randomDevice{};
-std::mt19937 pengen::Random::s_generator{s_randomDevice()};
+std::random_device noisegen::Random::s_randomDevice{};
+std::mt19937 noisegen::Random::s_generator{s_randomDevice()};
