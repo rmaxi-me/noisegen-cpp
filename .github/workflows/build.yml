@@ -17,15 +17,15 @@ jobs:
         include:
           - os: ubuntu-20.04
             pip-path: ~/.cache/pip
-            exe-path: ./build/pengen
+            cli-path: ./build/pengen
             lib-path: ./build/libpengen.a
           - os: macos-10.15
             pip-path: ~/Library/Caches/pip
-            exe-path: ./build/pengen
+            cli-path: ./build/pengen
             lib-path: ./build/libpengen.a
           - os: windows-2019
             pip-path: ~\AppData\Local\pip\Cache
-            exe-path: ./build/pengen.exe
+            cli-path: ./build/pengen.exe
             lib-path: ./build/libpengen.lib
             pdb-path: ./build/*.pdb
 
@@ -85,9 +85,9 @@ jobs:
           mkdir -p generated-images
 
           echo "Random:"
-          ${{ matrix.exe-path }} --output ./generated-images/random.pgm 1024 1024
+          ${{ matrix.cli-path }} --output ./generated-images/random.pgm 1024 1024
           echo "Ken Perlin:"
-          ${{ matrix.exe-path }} --output ./generated-images/kenperlin.pgm --kenperlin 1024 1024
+          ${{ matrix.cli-path }} --output ./generated-images/kenperlin.pgm --kenperlin 1024 1024
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -95,7 +95,7 @@ jobs:
           name: ${{ runner.os }}-${{ matrix.mode }}-cpp${{ matrix.cppstd }}.zip
           path: |
             ./generated-images/*
-            ${{ matrix.exe-path }}
+            ${{ matrix.cli-path }}
             ${{ matrix.lib-path }}
             ${{ matrix.pdb-path }}
           if-no-files-found: warn

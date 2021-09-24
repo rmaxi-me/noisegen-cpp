@@ -41,5 +41,5 @@ add_subdirectory(lib)
 include_directories(lib/include)
 
 if (${PENGEN_BUILD_EXECUTABLE})
-    add_subdirectory(exe)
+    add_subdirectory(cli)
 endif ()
