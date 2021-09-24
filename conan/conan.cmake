@@ -9,7 +9,7 @@ macro(run_conan)
 
     include(${CMAKE_BINARY_DIR}/conan/conan.cmake)
 
-    conan_add_remote(NAME bincrafters URL https://api.bintray.com/conan/bincrafters/public-conan)
+    conan_add_remote(NAME bincrafters URL https://bincrafters.jfrog.io/artifactory/api/conan/public-conan)
 
     if (${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
         set(_GLIBCXX_USE_CXX11_ABI)
