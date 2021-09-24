@@ -11,62 +11,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, macos-10.15, windows-2019 ]
+        os: [ ubuntu-20.04, macos-11, windows-2019 ]
         mode: [ "Debug", "Release" ]
         cppstd: [ 17, 20 ]
         include:
           - os: ubuntu-20.04
-            pip-path: ~/.cache/pip
-            cli-path: ./build/pengen
+            cli-path: ./build/pengencli
             lib-path: ./build/libpengen.a
-          - os: macos-10.15
-            pip-path: ~/Library/Caches/pip
-            cli-path: ./build/pengen
+          - os: macos-11
+            cli-path: ./build/pengencli
             lib-path: ./build/libpengen.a
           - os: windows-2019
-            pip-path: ~\AppData\Local\pip\Cache
-            cli-path: ./build/pengen.exe
-            lib-path: ./build/libpengen.lib
+            cli-path: ./build/pengencli.exe
+            lib-path: ./build/pengen.lib
             pdb-path: ./build/*.pdb
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+        with:
+          submodules: 'true'
 
       - name: apt dependencies
         run: sudo apt install -y libtbb-dev libgtk2.0-dev
         if: startsWith(matrix.os, 'ubuntu')
-
-#      - name: Pip Cache
-#        uses: actions/cache@v2
-#        with:
-#          path: ${{ matrix.pip-path }}
-#          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-#          restore-keys: |
-#            ${{ runner.os }}-pip-
-
-      - name: Conan Cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.conan
-          key: ${{ runner.os }}-conan-${{ matrix.mode }}-cpp${{ matrix.cppstd }}-${{ hashFiles('**/conanfile.txt') }}
-          # Generated too many errors. Better rebuild when the conanfile changes to avoid more errors.
-          # restore-keys: |
-          #   ${{ runner.os }}-conan-${{ matrix.mode }}-cpp${{ matrix.cppstd }}-
-        id: cache
-
-      - name: Install Pip Dependencies
-        run: pip install -r requirements.txt
-
-      # Workaround for macOS clang builds, I don't know why but dependencies think the project uses C++gnu98
-      - name: Generate default Conan profile
-        if: startsWith(matrix.os, 'macos') && steps.cache.outputs.cache-hit != 'true'
-        run: |
-          conan profile new default --detect
-          conan profile update settings.compiler.cppstd=${{ matrix.cppstd }} default
-          cat ~/.conan/profiles/default
 
       - name: Configure
         run: |
@@ -100,3 +69,14 @@ jobs:
             ${{ matrix.pdb-path }}
           if-no-files-found: warn
           retention-days: 14
+
+  clang-format-check:
+    name: clang-format check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run clang-format
+        uses: jidicula/clang-format-action@v4.0.0
+        with:
+          clang-format-version: '12'

@@ -1,14 +1,13 @@
-if (UNIX)
-    if (NOT APPLE)
-        link_libraries(pthread stdc++fs tbb)
-        add_compile_definitions(TBB_SUPPRESS_DEPRECATED_MESSAGES=1) # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101228
-    endif ()
+include(cmake/warnings.cmake)
 
-    add_compile_options(-Wall -Wextra)
+if (UNIX AND NOT APPLE)
+    link_libraries(tbb)
+    add_compile_definitions(TBB_SUPPRESS_DEPRECATED_MESSAGES=1) # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101228
+endif ()
 
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        add_compile_options(-Weffc++)
-    endif ()
+if (MSVC)
+    add_link_options(/ignore:4099)
+    #    link_libraries(legacy_stdio_definitions)
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -27,11 +26,6 @@ if (${PENGEN_WITH_PROFILER})
     add_compile_definitions(PENGEN_WITH_PROFILER=1)
 else ()
     add_compile_definitions(PENGEN_WITH_PROFILER=0)
-endif ()
-
-if (MSVC)
-    add_link_options(/ignore:4099)
-    #    link_libraries(legacy_stdio_definitions)
 endif ()
 
 add_compile_definitions(cimg_display=0) # Won't need to display anything through CImg

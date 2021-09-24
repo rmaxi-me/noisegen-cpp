@@ -51,9 +51,9 @@ pengen::Generator::Generator(Settings settings, const std::optional<PermutationA
 
 double pengen::Generator::noise3D(double x, double y, double z) const noexcept
 {
-    int X = static_cast<int>(std::floor(x)) & 255;
-    int Y = static_cast<int>(std::floor(y)) & 255;
-    int Z = static_cast<int>(std::floor(z)) & 255;
+    auto X = static_cast<uint8_t>(static_cast<int>(std::floor(x)) & 255);
+    auto Y = static_cast<uint8_t>(static_cast<int>(std::floor(y)) & 255);
+    auto Z = static_cast<uint8_t>(static_cast<int>(std::floor(z)) & 255);
 
     x -= std::floor(x);
     y -= std::floor(y);
@@ -63,12 +63,12 @@ double pengen::Generator::noise3D(double x, double y, double z) const noexcept
     const double v = fade(y);
     const double w = fade(z);
 
-    const int A = getPermutation(X) + Y;
-    const int AA = getPermutation(A) + Z;
-    const int AB = getPermutation(A + 1) + Z;
-    const int B = getPermutation(X + 1) + Y;
-    const int BA = getPermutation(B) + Z;
-    const int BB = getPermutation(B + 1) + Z;
+    const uint32_t A = getPermutation(X) + Y;
+    const uint32_t AA = getPermutation(A) + Z;
+    const uint32_t AB = getPermutation(A + 1) + Z;
+    const uint32_t B = getPermutation(X + 1) + Y;
+    const uint32_t BA = getPermutation(B) + Z;
+    const uint32_t BB = getPermutation(B + 1) + Z;
 
     return lerp(
       w,

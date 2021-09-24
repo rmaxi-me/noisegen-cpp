@@ -14,12 +14,13 @@
 **   limitations under the License.
 */
 
-#include <argparse.hpp>
+#include <CImg.h>
+#include <argparse/argparse.hpp>
 
-#include <perlin-noise-generator/Generator.hpp>
-#include <perlin-noise-generator/Settings.hpp>
-#include <perlin-noise-generator/ScopedProfiler.hpp>
-#include <perlin-noise-generator/Exception.hpp>
+#include "perlin-noise-generator/Generator.hpp"
+#include "perlin-noise-generator/Settings.hpp"
+#include "perlin-noise-generator/ScopedProfiler.hpp"
+#include "perlin-noise-generator/Exception.hpp"
 
 static pengen::Settings parseArguments(int argc, const char *const *const argv)
 {
@@ -117,6 +118,9 @@ int main(int argc, const char *const *const argv)
 
     generator.generate();
     generator.saveToPGM();
+
+    // TODO: remove
+    cimg_library::CImg<int> img{};
 
     return 0;
 }
