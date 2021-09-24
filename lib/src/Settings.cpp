@@ -21,7 +21,7 @@
 
 #include "Settings.hpp"
 
-std::ostream &pengen::operator<<(std::ostream &os, const pengen::Settings &settings)
+std::ostream &noisegen::operator<<(std::ostream &os, const noisegen::Settings &settings)
 {
     os << "width: " << settings.width << " height: " << settings.height << " octaves: " << settings.octaves
        << " persistence: " << settings.persistence << " count: " << settings.count
@@ -30,7 +30,7 @@ std::ostream &pengen::operator<<(std::ostream &os, const pengen::Settings &setti
     return os;
 }
 
-std::string pengen::Settings::toString() const
+std::string noisegen::Settings::toString() const
 {
     std::ostringstream oss{};
 

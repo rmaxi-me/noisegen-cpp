@@ -1,10 +1,10 @@
 add_library(
-        pengen
-        src/Generator.cpp include/perlin-noise-generator/Generator.hpp
-        src/Random.cpp include/perlin-noise-generator/Random.hpp
-        src/Settings.cpp include/perlin-noise-generator/Settings.hpp
-        src/ScopedProfiler.cpp include/perlin-noise-generator/ScopedProfiler.hpp
-        src/Exception.cpp include/perlin-noise-generator/Exception.hpp
+        noisegen
+        src/Generator.cpp include/noisegen/Generator.hpp
+        src/Random.cpp include/noisegen/Random.hpp
+        src/Settings.cpp include/noisegen/Settings.hpp
+        src/ScopedProfiler.cpp include/noisegen/ScopedProfiler.hpp
+        src/Exception.cpp include/noisegen/Exception.hpp
 )
-target_include_directories(pengen PRIVATE include/perlin-noise-generator)
-target_include_directories(pengen SYSTEM PUBLIC ${PROJECT_SOURCE_DIR}/vendor/CImg)
+target_include_directories(noisegen PRIVATE include/noisegen)
+target_include_directories(noisegen SYSTEM PUBLIC ${PROJECT_SOURCE_DIR}/vendor/CImg)

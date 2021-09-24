@@ -16,14 +16,14 @@ jobs:
         cppstd: [ 17, 20 ]
         include:
           - os: ubuntu-20.04
-            cli-path: ./build/pengencli
-            lib-path: ./build/libpengen.a
+            cli-path: ./build/noisegencli
+            lib-path: ./build/libnoisegen.a
           - os: macos-11
-            cli-path: ./build/pengencli
-            lib-path: ./build/libpengen.a
+            cli-path: ./build/noisegencli
+            lib-path: ./build/libnoisegen.a
           - os: windows-2019
-            cli-path: ./build/pengencli.exe
-            lib-path: ./build/pengen.lib
+            cli-path: ./build/noisegencli.exe
+            lib-path: ./build/noisegen.lib
             pdb-path: ./build/*.pdb
 
     runs-on: ${{ matrix.os }}
@@ -43,7 +43,7 @@ jobs:
           cd build
           cmake -DCMAKE_CXX_STANDARD=${{ matrix.cppstd }} \
                 -DCMAKE_BUILD_TYPE=${{ matrix.mode }} \
-                -DPENGEN_WITH_PROFILER=ON ..
+                -DNOISEGEN_WITH_PROFILER=ON ..
 
       - name: Build
         working-directory: build

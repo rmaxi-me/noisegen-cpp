@@ -24,7 +24,7 @@
 #include <string>
 #include <utility>
 
-namespace pengen::utils {
+namespace noisegen::utils {
 class ScopedProfiler final
 {
 public:
@@ -46,15 +46,15 @@ public:
     ScopedProfiler &operator=(ScopedProfiler &&) = delete;
     ScopedProfiler &operator=(const ScopedProfiler &) = delete;
 };
-}  // namespace pengen::utils
+}  // namespace noisegen::utils
 
-#if PENGEN_WITH_PROFILER
-    #define PENGEN_SCOPED_PROFILER_COMB1(x, y) x##y
-    #define PENGEN_SCOPED_PROFILER_COMB(x, y)  PENGEN_SCOPED_PROFILER_COMB1(x, y)
+#if NOISEGEN_WITH_PROFILER
+    #define NOISEGEN_SCOPED_PROFILER_COMB1(x, y) x##y
+    #define NOISEGEN_SCOPED_PROFILER_COMB(x, y)  NOISEGEN_SCOPED_PROFILER_COMB1(x, y)
 
-    #define PENGEN_SCOPED_PROFILER(x) \
-        const pengen::utils::ScopedProfiler PENGEN_SCOPED_PROFILER_COMB(PENGEN_SCOPED_PROFILER_, __LINE__)(x)
+    #define NOISEGEN_SCOPED_PROFILER(x) \
+        const noisegen::utils::ScopedProfiler NOISEGEN_SCOPED_PROFILER_COMB(NOISEGEN_SCOPED_PROFILER_, __LINE__)(x)
 #else
-    #define PENGEN_SCOPED_PROFILER(x)     (void) 0
-    #define PENGEN_SCOPED_PROFILER_DTOR() (void) 0
+    #define NOISEGEN_SCOPED_PROFILER(x)     (void) 0
+    #define NOISEGEN_SCOPED_PROFILER_DTOR() (void) 0
 #endif

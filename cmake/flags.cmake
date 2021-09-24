@@ -11,9 +11,9 @@ if (MSVC)
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_definitions(PENGEN_HAS_EXEC_POLICIES=0)
+    add_compile_definitions(NOISEGEN_HAS_EXEC_POLICIES=0)
 else ()
-    add_compile_definitions(PENGEN_HAS_EXEC_POLICIES=1)
+    add_compile_definitions(NOISEGEN_HAS_EXEC_POLICIES=1)
 endif ()
 
 if (${CMAKE_BUILD_TYPE} MATCHES "Debug")
@@ -22,10 +22,10 @@ else ()
     add_compile_definitions(RELEASE=1)
 endif ()
 
-if (${PENGEN_WITH_PROFILER})
-    add_compile_definitions(PENGEN_WITH_PROFILER=1)
+if (${NOISEGEN_WITH_PROFILER})
+    add_compile_definitions(NOISEGEN_WITH_PROFILER=1)
 else ()
-    add_compile_definitions(PENGEN_WITH_PROFILER=0)
+    add_compile_definitions(NOISEGEN_WITH_PROFILER=0)
 endif ()
 
 add_compile_definitions(cimg_display=0) # Won't need to display anything through CImg

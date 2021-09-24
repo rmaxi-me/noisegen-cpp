@@ -1,4 +1,4 @@
-# perlin-noise-generator
+# noisegen
 ###### Cross-Platform Perlin Noise Generator written in C++, just for fun :)
 
 ### Supported platforms
