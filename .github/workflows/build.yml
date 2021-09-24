@@ -23,7 +23,7 @@ jobs:
             lib-path: ./build/libpengen.a
           - os: windows-2019
             cli-path: ./build/pengencli.exe
-            lib-path: ./build/libpengen.lib
+            lib-path: ./build/pengen.lib
             pdb-path: ./build/*.pdb
 
     runs-on: ${{ matrix.os }}
