@@ -18,7 +18,7 @@ jobs:
           - os: ubuntu-20.04
             cli-path: ./build/pengencli
             lib-path: ./build/libpengen.a
-          - os: macos-10.15
+          - os: macos-11
             cli-path: ./build/pengencli
             lib-path: ./build/libpengen.a
           - os: windows-2019
