@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.10)
-project(perlin-noise-generator LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16)
+project(perlin-noise-generator)
 
 if (NOT "${CMAKE_CXX_STANDARD}")
     set(CMAKE_CXX_STANDARD 17)
@@ -11,17 +11,12 @@ if (NOT CMAKE_BUILD_TYPE OR "${CMAKE_BUILD_TYPE}" STREQUAL "")
     message(WARNING "CMAKE_BUILD_TYPE undefined. Defaulting to Release.")
 endif ()
 
-include(conan/conan.cmake)
-run_conan()
-link_directories(${CONAN_LIB_DIRS})
-link_libraries(${CONAN_LIBS})
-include_directories(SYSTEM "${CONAN_INCLUDE_DIRS}")
-
 include(cmake/flags.cmake)
 
+option(PENGEN_BUILD_CLI "Build CLI" ON)
+option(PENGEN_BUILD_GUI "Build GUI" ON) # soon™️
+
 option(PENGEN_WITH_PROFILER "Enable scoped profiler" OFF)
-option(PENGEN_BUILD_EXECUTABLE "Build Executable" ON)
-option(PENGEN_PCH "Use precompiled headers" ON)
 # option(PENGEN_BUILD_SHARED_LIB "Build Shared Library" ON) # TODO: implement this
 
 if (WIN32 OR WIN64)
@@ -40,6 +35,6 @@ endif ()
 add_subdirectory(lib)
 include_directories(lib/include)
 
-if (${PENGEN_BUILD_EXECUTABLE})
+if (${PENGEN_BUILD_CLI})
     add_subdirectory(cli)
 endif ()

@@ -1,10 +1,8 @@
-
 add_executable(
-        pengen
+        pengencli
         src/Main.cpp
 )
-target_link_libraries(pengen PUBLIC libpengen)
+target_link_libraries(pengencli PUBLIC pengen)
+target_include_directories(pengencli SYSTEM PUBLIC ${PROJECT_SOURCE_DIR}/vendor/argparse/include)
 
-if (PENGEN_PCH AND NOT ${CMAKE_VERSION} VERSION_LESS "3.16")
-    target_precompile_headers(pengen REUSE_FROM libpengen)
-endif ()
+target_precompile_headers(pengencli REUSE_FROM pengen)

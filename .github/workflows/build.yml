@@ -16,15 +16,12 @@ jobs:
         cppstd: [ 17, 20 ]
         include:
           - os: ubuntu-20.04
-            pip-path: ~/.cache/pip
             cli-path: ./build/pengen
             lib-path: ./build/libpengen.a
           - os: macos-10.15
-            pip-path: ~/Library/Caches/pip
             cli-path: ./build/pengen
             lib-path: ./build/libpengen.a
           - os: windows-2019
-            pip-path: ~\AppData\Local\pip\Cache
             cli-path: ./build/pengen.exe
             lib-path: ./build/libpengen.lib
             pdb-path: ./build/*.pdb
@@ -33,40 +30,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+        with:
+          submodules: 'true'
 
       - name: apt dependencies
         run: sudo apt install -y libtbb-dev libgtk2.0-dev
         if: startsWith(matrix.os, 'ubuntu')
-
-#      - name: Pip Cache
-#        uses: actions/cache@v2
-#        with:
-#          path: ${{ matrix.pip-path }}
-#          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-#          restore-keys: |
-#            ${{ runner.os }}-pip-
-
-      - name: Conan Cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.conan
-          key: ${{ runner.os }}-conan-${{ matrix.mode }}-cpp${{ matrix.cppstd }}-${{ hashFiles('**/conanfile.txt') }}
-          # Generated too many errors. Better rebuild when the conanfile changes to avoid more errors.
-          # restore-keys: |
-          #   ${{ runner.os }}-conan-${{ matrix.mode }}-cpp${{ matrix.cppstd }}-
-        id: cache
-
-      - name: Install Pip Dependencies
-        run: pip install -r requirements.txt
-
-      # Workaround for macOS clang builds, I don't know why but dependencies think the project uses C++gnu98
-      - name: Generate default Conan profile
-        if: startsWith(matrix.os, 'macos') && steps.cache.outputs.cache-hit != 'true'
-        run: |
-          conan profile new default --detect
-          conan profile update settings.compiler.cppstd=${{ matrix.cppstd }} default
-          cat ~/.conan/profiles/default
 
       - name: Configure
         run: |

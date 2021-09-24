@@ -24,8 +24,6 @@
 #include <optional>
 #include <algorithm>
 
-#include "PengenCImg.hpp"
-
 #include "Random.hpp"
 #include "Settings.hpp"
 #include "ScopedProfiler.hpp"
@@ -44,9 +42,9 @@ struct Pixel
     uint32_t y{};
     double value{};
 
-    explicit Pixel(double value) : value{value} {}
-    Pixel(uint32_t x, uint32_t y) : x{x}, y{y} {}
-    Pixel(uint32_t x, uint32_t y, double value) : x{x}, y{y}, value{value} {}
+    explicit Pixel(double aValue) : value{aValue} {}
+    Pixel(uint32_t aX, uint32_t aY) : x{aX}, y{aY} {}
+    Pixel(uint32_t aX, uint32_t aY, double aValue) : x{aX}, y{aY}, value{aValue} {}
 
     bool operator==(const Pixel &rhs) const noexcept { return value == rhs.value; }
     bool operator!=(const Pixel &rhs) const noexcept { return !(rhs == *this); }
@@ -84,7 +82,7 @@ public:
 
     void generate();
     void saveToPGM() const;
-    [[nodiscard]] double noise3D(double x, double y, double z) const noexcept; // TODO: noise2D and noise1D
+    [[nodiscard]] double noise3D(double x, double y, double z) const noexcept;  // TODO: noise2D and noise1D
 
     template<typename Gen>
     void shufflePermutationArray(Gen &&generator)
