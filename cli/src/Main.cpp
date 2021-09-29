@@ -14,7 +14,8 @@
 **   limitations under the License.
 */
 
-#include <argparse.hpp>
+#include <CImg.h>
+#include <argparse/argparse.hpp>
 
 #include <noisegen/Generator.hpp>
 #include <noisegen/Settings.hpp>
@@ -117,6 +118,9 @@ int main(int argc, const char *const *const argv)
 
     generator.generate();
     generator.saveToPGM();
+
+    // TODO: remove
+    cimg_library::CImg<int> img{};
 
     return 0;
 }
