@@ -118,8 +118,5 @@ int main(int argc, const char *const *const argv)
     generator.generate();
     generator.saveToPGM();
 
-    // TODO: remove
-    cimg_library::CImg<int> img{};
-
     return 0;
 }
