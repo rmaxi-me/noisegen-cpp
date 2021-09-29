@@ -14,8 +14,7 @@
 **   limitations under the License.
 */
 
-#include <CImg.h>
-#include <argparse/argparse.hpp>
+#include <argparse.hpp>
 
 #include <noisegen/Generator.hpp>
 #include <noisegen/Settings.hpp>
