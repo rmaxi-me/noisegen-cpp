@@ -1,0 +1,13 @@
+[requires]
+cimg/2.9.4
+argparse/2.1
+
+[options]
+*:shared=False
+
+[generators]
+cmake
+cmake_paths
+cmake_find_package
+
+# v1  # Increment to reset gh-action cache

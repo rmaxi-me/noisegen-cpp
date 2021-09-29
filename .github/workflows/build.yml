@@ -16,12 +16,15 @@ jobs:
         cppstd: [ 17, 20 ]
         include:
           - os: ubuntu-20.04
+            pip-path: ~/.cache/pip
             cli-path: ./build/noisegencli
             lib-path: ./build/libnoisegen.a
           - os: macos-11
+            pip-path: ~/Library/Caches/pip
             cli-path: ./build/noisegencli
             lib-path: ./build/libnoisegen.a
           - os: windows-2019
+            pip-path: ~\AppData\Local\pip\Cache
             cli-path: ./build/noisegencli.exe
             lib-path: ./build/noisegen.lib
             pdb-path: ./build/*.pdb
@@ -30,12 +33,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: 'true'
+      - uses: actions/setup-python@v2
 
       - name: apt dependencies
         run: sudo apt install -y libtbb-dev libgtk2.0-dev
         if: startsWith(matrix.os, 'ubuntu')
+
+      - name: Pip Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.pip-path }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Conan Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.conan
+          key: ${{ runner.os }}-conan-${{ matrix.mode }}-cpp${{ matrix.cppstd }}-${{ hashFiles('**/conanfile.txt') }}
+
+      - name: Install Pip Dependencies
+        run: pip install -r requirements.txt
 
       - name: Configure
         run: |

@@ -55,6 +55,5 @@ public:
     #define NOISEGEN_SCOPED_PROFILER(x) \
         const noisegen::utils::ScopedProfiler NOISEGEN_SCOPED_PROFILER_COMB(NOISEGEN_SCOPED_PROFILER_, __LINE__)(x)
 #else
-    #define NOISEGEN_SCOPED_PROFILER(x)     (void) 0
-    #define NOISEGEN_SCOPED_PROFILER_DTOR() (void) 0
+    #define NOISEGEN_SCOPED_PROFILER(x) (void) 0
 #endif

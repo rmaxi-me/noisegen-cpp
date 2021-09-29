@@ -7,4 +7,3 @@ add_library(
         src/Exception.cpp include/noisegen/Exception.hpp
 )
 target_include_directories(noisegen PRIVATE include/noisegen)
-target_include_directories(noisegen SYSTEM PUBLIC ${PROJECT_SOURCE_DIR}/vendor/CImg)

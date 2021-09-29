@@ -58,11 +58,6 @@ set(GCC_WARNINGS
         -Wduplicated-branches # warn if if / else branches have duplicated code
         -Wlogical-op # warn about logical operations being used where bitwise were probably wanted
         -Wuseless-cast # warn if you perform a cast to the same type
-
-        # FIXME: weird <command-line> warning when using CImg.h ??
-        # it is included as a system header in cmake, so it should not throw any warnings...
-        # I don't understand :(
-        -Wno-old-style-cast
         )
 
 if (MSVC)
