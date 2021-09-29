@@ -16,16 +16,16 @@
 
 #include <argparse.hpp>
 
-#include <perlin-noise-generator/Generator.hpp>
-#include <perlin-noise-generator/Settings.hpp>
-#include <perlin-noise-generator/ScopedProfiler.hpp>
-#include <perlin-noise-generator/Exception.hpp>
+#include <noisegen/Generator.hpp>
+#include <noisegen/Settings.hpp>
+#include <noisegen/ScopedProfiler.hpp>
+#include <noisegen/Exception.hpp>
 
-static pengen::Settings parseArguments(int argc, const char *const *const argv)
+static noisegen::Settings parseArguments(int argc, const char *const *const argv)
 {
-    PENGEN_SCOPED_PROFILER("parseArguments()");
+    NOISEGEN_SCOPED_PROFILER("parseArguments()");
 
-    pengen::Settings settings{};
+    noisegen::Settings settings{};
 
     // constexpr auto strToInt = [](const std::string &value) { return std::stoi(value); };
     constexpr auto strToUInt32 = [](const std::string &value) { return static_cast<uint32_t>(std::stoul(value)); };
@@ -79,12 +79,12 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
     {
         std::cerr << program;
         std::cerr << "\nerror: " << e.what() << '\n';
-        throw pengen::ArgumentParseException{};
+        throw noisegen::ArgumentParseException{};
     } catch (const std::invalid_argument &e)
     {
         std::cerr << program;
         std::cerr << "\nerror: invalid argument: " << e.what() << '\n';
-        throw pengen::ArgumentParseException{};
+        throw noisegen::ArgumentParseException{};
     }
 
     settings.width = program.get<uint32_t>("width");
@@ -101,19 +101,19 @@ static pengen::Settings parseArguments(int argc, const char *const *const argv)
 
 int main(int argc, const char *const *const argv)
 {
-    PENGEN_SCOPED_PROFILER("main()");
+    NOISEGEN_SCOPED_PROFILER("main()");
 
-    pengen::Settings settings;
+    noisegen::Settings settings;
 
     try
     {
         settings = parseArguments(argc, argv);
-    } catch (const pengen::ArgumentParseException &)
+    } catch (const noisegen::ArgumentParseException &)
     {
         return 1;
     }
 
-    pengen::Generator generator{settings};
+    noisegen::Generator generator{settings};
 
     generator.generate();
     generator.saveToPGM();

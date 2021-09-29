@@ -19,31 +19,31 @@
 
 #include "Exception.hpp"
 
-pengen::Exception::Exception(const char *what) : m_what{what}
+noisegen::Exception::Exception(const char *what) : m_what{what}
 {
 }
 
-pengen::Exception::Exception(std::string_view what) : m_what{what}
+noisegen::Exception::Exception(std::string_view what) : m_what{what}
 {
 }
 
-pengen::Exception::Exception(std::string what) : m_what{std::move(what)}
+noisegen::Exception::Exception(std::string what) : m_what{std::move(what)}
 {
 }
 
-const char *pengen::Exception::what() const noexcept
+const char *noisegen::Exception::what() const noexcept
 {
     return m_what.c_str();
 }
 
-pengen::ArgumentParseException::ArgumentParseException(const char *what) : Exception(what)
+noisegen::ArgumentParseException::ArgumentParseException(const char *what) : Exception(what)
 {
 }
 
-pengen::ArgumentParseException::ArgumentParseException(std::string_view what) : Exception(what)
+noisegen::ArgumentParseException::ArgumentParseException(std::string_view what) : Exception(what)
 {
 }
 
-pengen::ArgumentParseException::ArgumentParseException(std::string what) : Exception(std::move(what))
+noisegen::ArgumentParseException::ArgumentParseException(std::string what) : Exception(std::move(what))
 {
 }

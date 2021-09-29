@@ -19,6 +19,33 @@
 
 #pragma once
 
-#include <CImg.h>
+#include <exception>
+#include <string>
+#include <string_view>
 
-namespace cimg = cimg_library;
+namespace noisegen {
+class Exception : public std::exception
+{
+public:
+    Exception() = default;
+    explicit Exception(const char *what);
+    explicit Exception(std::string_view what);
+    explicit Exception(std::string what);
+
+    ~Exception() override = default;
+
+    [[nodiscard]] const char *what() const noexcept override;
+
+protected:
+    std::string m_what{"noisegen exception"};
+};
+
+class ArgumentParseException : public Exception
+{
+public:
+    ArgumentParseException() = default;
+    explicit ArgumentParseException(const char *what);
+    explicit ArgumentParseException(std::string_view what);
+    explicit ArgumentParseException(std::string what);
+};
+}  // namespace noisegen

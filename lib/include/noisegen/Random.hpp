@@ -21,7 +21,7 @@
 
 #include <random>
 
-namespace pengen {
+namespace noisegen {
 struct Random final
 {
     Random() = delete;
@@ -29,4 +29,4 @@ struct Random final
     static std::random_device s_randomDevice;
     static std::mt19937 s_generator;
 };
-}  // namespace pengen
+}  // namespace noisegen

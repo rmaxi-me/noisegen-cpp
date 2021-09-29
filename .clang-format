@@ -62,7 +62,7 @@ MaxEmptyLinesToKeep: 1
 NamespaceIndentation: Inner
 PointerAlignment: Right
 ReflowComments: false
-SortIncludes: Never
+SortIncludes: false  # CLion adds a warning here, but it looks like a false positive
 SortUsingDeclarations: false
 SpaceAfterCStyleCast: true
 SpaceAfterLogicalNot: false

@@ -14,11 +14,11 @@
 **   limitations under the License.
 */
 
-#if PENGEN_HAS_EXEC_POLICIES
+#if NOISEGEN_HAS_EXEC_POLICIES
     #include <execution>
-    #define PENGEN_EXEC_PAR_UNSEC std::execution::par_unseq,
+    #define NOISEGEN_EXEC_PAR_UNSEC std::execution::par_unseq,
 #else
-    #define PENGEN_EXEC_PAR_UNSEC
+    #define NOISEGEN_EXEC_PAR_UNSEC
 #endif
 
 #include <limits>
@@ -36,10 +36,10 @@
  * Original implementation: https://mrl.cs.nyu.edu/~perlin/noise/
  */
 
-pengen::Generator::Generator(Settings settings, const std::optional<PermutationArray> &permutationArrayOverride)
+noisegen::Generator::Generator(Settings settings, const std::optional<PermutationArray> &permutationArrayOverride)
     : m_settings{std::move(settings)}
 {
-    PENGEN_SCOPED_PROFILER("Generator()");
+    NOISEGEN_SCOPED_PROFILER("Generator()");
 
     if (permutationArrayOverride.has_value())
         m_permutations = permutationArrayOverride.value();
@@ -49,11 +49,11 @@ pengen::Generator::Generator(Settings settings, const std::optional<PermutationA
     cacheFrequencyAndAmplitude();
 }
 
-double pengen::Generator::noise3D(double x, double y, double z) const noexcept
+double noisegen::Generator::noise3D(double x, double y, double z) const noexcept
 {
-    int X = static_cast<int>(std::floor(x)) & 255;
-    int Y = static_cast<int>(std::floor(y)) & 255;
-    int Z = static_cast<int>(std::floor(z)) & 255;
+    auto X = static_cast<uint8_t>(static_cast<int>(std::floor(x)) & 255);
+    auto Y = static_cast<uint8_t>(static_cast<int>(std::floor(y)) & 255);
+    auto Z = static_cast<uint8_t>(static_cast<int>(std::floor(z)) & 255);
 
     x -= std::floor(x);
     y -= std::floor(y);
@@ -63,12 +63,12 @@ double pengen::Generator::noise3D(double x, double y, double z) const noexcept
     const double v = fade(y);
     const double w = fade(z);
 
-    const int A = getPermutation(X) + Y;
-    const int AA = getPermutation(A) + Z;
-    const int AB = getPermutation(A + 1) + Z;
-    const int B = getPermutation(X + 1) + Y;
-    const int BA = getPermutation(B) + Z;
-    const int BB = getPermutation(B + 1) + Z;
+    const uint32_t A = getPermutation(X) + Y;
+    const uint32_t AA = getPermutation(A) + Z;
+    const uint32_t AB = getPermutation(A + 1) + Z;
+    const uint32_t B = getPermutation(X + 1) + Y;
+    const uint32_t BA = getPermutation(B) + Z;
+    const uint32_t BB = getPermutation(B + 1) + Z;
 
     return lerp(
       w,
@@ -78,9 +78,9 @@ double pengen::Generator::noise3D(double x, double y, double z) const noexcept
            lerp(u, grad(getPermutation(AB + 1), x, y - 1, z - 1), grad(getPermutation(BB + 1), x - 1, y - 1, z - 1))));
 }
 
-void pengen::Generator::generate()
+void noisegen::Generator::generate()
 {
-    PENGEN_SCOPED_PROFILER("Generator::generate()");
+    NOISEGEN_SCOPED_PROFILER("Generator::generate()");
 
     // keep track of min and max value for scaling later
     m_minNoiseValue = std::numeric_limits<double>::max();
@@ -94,7 +94,7 @@ void pengen::Generator::generate()
         for (uint32_t x = 0; x < m_settings.width; x++)
             m_pixels.emplace_back(x, y);
 
-    std::transform(PENGEN_EXEC_PAR_UNSEC m_pixels.cbegin(), m_pixels.cend(), m_pixels.begin(), [&](auto &&pixel) {
+    std::transform(NOISEGEN_EXEC_PAR_UNSEC m_pixels.cbegin(), m_pixels.cend(), m_pixels.begin(), [&](auto &&pixel) {
         const auto x = pixel.x;
         const auto y = pixel.y;
         double noiseValue = 0.0;
@@ -115,9 +115,9 @@ void pengen::Generator::generate()
     m_maxNoiseValue = max->value;
 }
 
-void pengen::Generator::saveToPGM() const
+void noisegen::Generator::saveToPGM() const
 {
-    PENGEN_SCOPED_PROFILER("Generator::saveToPGM()");
+    NOISEGEN_SCOPED_PROFILER("Generator::saveToPGM()");
 
     if (m_settings.bDryRun)
         return;
@@ -137,9 +137,9 @@ void pengen::Generator::saveToPGM() const
     }
 }
 
-void pengen::Generator::cacheFrequencyAndAmplitude()
+void noisegen::Generator::cacheFrequencyAndAmplitude()
 {
-    PENGEN_SCOPED_PROFILER("Generator::cacheFrequencyAndAmplitude()");
+    NOISEGEN_SCOPED_PROFILER("Generator::cacheFrequencyAndAmplitude()");
 
     m_frequencyCache.resize(m_settings.octaves);
     m_amplitudeCache.resize(m_settings.octaves);

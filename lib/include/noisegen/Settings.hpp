@@ -22,7 +22,7 @@
 #include <cstdint>
 #include <ostream>
 
-namespace pengen {
+namespace noisegen {
 struct Settings
 {
     uint32_t width{};
@@ -42,5 +42,5 @@ struct Settings
     [[nodiscard]] std::string toString() const;
 };
 
-std::ostream &operator<<(std::ostream &os, const pengen::Settings &settings);
-}  // namespace pengen
+std::ostream &operator<<(std::ostream &os, const noisegen::Settings &settings);
+}  // namespace noisegen
